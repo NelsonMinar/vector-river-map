@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
+
+<title>Leaflet HUC map</title>
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+<![endif]-->
+<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+<script src="../lib/leaflet-hash.js"></script>
+
+<script src="../lib/queue.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="leaflet-tilelayer-geojson/TileLayer.GeoJSON.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<style type="text/css">
+html, body { height: 100% }
+#map { min-height: 100%; }
+body {
+    margin: 0;
+    font-family: Helvetica, Arial, sans-serif; font-size: 12px;
+    overflow: hidden;
+    background-color: #f00;
+}
+</style>
+
+</head><body>
+
+<div id="map"></div>
+
+<script type="text/javascript">
+
+// Global dictionary of HUC names
+var hucNames = {}
+
+// Construct map, center if no location provided
+var map = L.map('map');
+var hash = new L.Hash(map);
+if (!window.location.hash) {
+    map.setView([38.8247, -121.5019], 8);
+}
+
+// Make the base map (various candidate tilesets)
+var googleTerrain = 'http://mts1.google.com/vt/lyrs=t@130,r&hl=en&src=app&x={x}&y={y}&z={z}&s=G';
+var stamenTerrain = 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png'
+var stamenBgTerrain = 'http://{s}.tile.stamen.com/terrain-background/{z}/{x}/{y}.png'
+var stamenToner = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png'
+var mapboxWarden = 'http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-warden/{z}/{x}/{y}.png'
+var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'
+var mapboxRelief = 'http://{s}.tiles.mapbox.com/v3/bobbysud.map-k57i9ckm/{z}/{x}/{y}.png?updated=6adc45a'
+var basemap = L.tileLayer(esriRelief, {
+        attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
+        maxZoom: 17
+});
+basemap.addTo(map);
+
+var geojsonURL = "http://nelsonminar.dnsalias.com/~nelson/tmp/huc-map/tilestache-server/map.cgi/riverst/{z}/{x}/{y}.json";
+var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
+    { style: { "color": "#29439c", "weight": 1.5, opacity: 1.0, } });
+map.addLayer(geojsonTileLayer);
+
+</script>
+</body></html>

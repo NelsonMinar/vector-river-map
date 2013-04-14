@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html><head>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
+<title>Maps</title>
+<script type="text/javascript" src="polymaps.js"></script>
+
+<style type="text/css">
+body {
+  margin: 0;
+  font-family: Helvetica, Arial; font-size: 12px;
+  overflow: hidden;
+}
+
+.compass .back { fill: #eee; fill-opacity: .8; }
+.compass .fore { stroke: #999; stroke-width: 1.5px; }
+.compass rect.back.fore { fill: #999; fill-opacity: .3; stroke: #eee; stroke-width: 1px; shape-rendering: crispEdges; }
+.compass .direction { fill: none; }
+.compass .chevron { fill: none; stroke: #999; stroke-width: 5px; }
+.compass .zoom .chevron { stroke-width: 4px; }
+.compass .active .chevron, .compass .chevron.active { stroke: #fff; }
+.compass.active .active .direction { fill: #999; }
+
+path { fill: none; stroke: #29439c; stroke-width: 1.5px }
+
+</style>
+</head>
+
+<body>
+<div id="map" style="width: 100%; height: 100%;"></div>
+
+<!-- Floating button controls for switching layers -->
+<div id="buttons">
+
+</div>
+
+<script type="text/javascript">
+var mapLocationInUrl = location.hash != "";
+
+var po = org.polymaps;
+
+// Construct our map
+var map = po.map()
+    .container(document.getElementById("map").appendChild(po.svg("svg")))
+    .add(po.dblclick())
+    .add(po.drag())
+    .add(po.arrow())
+    .add(po.wheel().smooth(false))
+    .add(po.hash())
+    .add(po.touch().rotate(false));
+
+map.add(po.image()
+    .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
+
+map.add(po.geoJson()
+    .url("http://nelsonminar.dnsalias.com/~nelson/tmp/huc-map/tilestache-server/map.cgi/riverst/{Z}/{X}/{Y}.json"));
+
+// Clamp the zoom range. Note: switchTo() will override this.
+map.zoomRange([0,30]);
+
+
+</script>
+</body></html>
+

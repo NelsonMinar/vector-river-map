@@ -1,0 +1,23 @@
+Vector tiles for California river data
+Uses TileStache+PostGIS to generate tiles,
+Polymaps to render them.
+
+Working VecTiles:
+tilestache-server/map.cgi/riverst/10/171/402.json
+
+Non-working Vector tiles:
+tilestache-server/map.cgi/riversdb/10/171/402.json
+
+tilestache-server/map.cgi/rivers/10/171/402.json
+
+
+Notes:
+http://nelsonslog.wordpress.com/2013/04/12/importing-an-esri-shapefile-to-postgis/
+http://nelsonslog.wordpress.com/2013/04/12/vector-tile-river-maps/
+
+Rough process for data import:
+
+createdb -T template_postgis2 nhd
+shp2pgsql -s 4269 -I -D -W LATIN1 NHDFlowline.shp | psql nhd
+select AddGeometryColumn('nhdflowline', 'sphgeometry', 900913, 'MULTILINESTRING', 2);
+update nhdflowline set sphgeometry = ST_Transform(ST_Force_2D(geom), 900913);
