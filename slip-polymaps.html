@@ -2,7 +2,7 @@
 <html><head>
 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
 <title>Maps</title>
-<script type="text/javascript" src="polymaps.js"></script>
+<script type="text/javascript" src="lib/polymaps.js"></script>
 
 <style type="text/css">
 body {
@@ -28,11 +28,6 @@ path { fill: none; stroke: #29439c; stroke-width: 1.5px }
 <body>
 <div id="map" style="width: 100%; height: 100%;"></div>
 
-<!-- Floating button controls for switching layers -->
-<div id="buttons">
-
-</div>
-
 <script type="text/javascript">
 var mapLocationInUrl = location.hash != "";
 
@@ -48,11 +43,16 @@ var map = po.map()
     .add(po.hash())
     .add(po.touch().rotate(false));
 
+if (!mapLocationInUrl) {
+    map.center({lon: -120.976, lat: 37.958});
+    map.zoom(8);
+}
+
 map.add(po.image()
     .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
 
 map.add(po.geoJson()
-    .url("http://nelsonminar.dnsalias.com/~nelson/tmp/huc-map/tilestache-server/map.cgi/riverst/{Z}/{X}/{Y}.json"));
+    .url("map.cgi/riverst/{Z}/{X}/{Y}.json"));
 
 // Clamp the zoom range. Note: switchTo() will override this.
 map.zoomRange([0,30]);

@@ -10,12 +10,8 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
 <![endif]-->
 <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
-<script src="../lib/leaflet-hash.js"></script>
-
-<script src="../lib/queue.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/topojson.v1.min.js"></script>
-<script src="leaflet-tilelayer-geojson/TileLayer.GeoJSON.js"></script>
+<script src="lib/leaflet-hash.js"></script>
+<script src="lib/TileLayer.GeoJSON.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 
 <style type="text/css">
@@ -42,7 +38,7 @@ var hucNames = {}
 var map = L.map('map');
 var hash = new L.Hash(map);
 if (!window.location.hash) {
-    map.setView([38.8247, -121.5019], 8);
+    map.setView([37.958, -120.976], 8);
 }
 
 // Make the base map (various candidate tilesets)
@@ -59,7 +55,7 @@ var basemap = L.tileLayer(esriRelief, {
 });
 basemap.addTo(map);
 
-var geojsonURL = "http://nelsonminar.dnsalias.com/~nelson/tmp/huc-map/tilestache-server/map.cgi/riverst/{z}/{x}/{y}.json";
+var geojsonURL = "map.cgi/riverst/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
     { style: { "color": "#29439c", "weight": 1.5, opacity: 1.0, } });
 map.addLayer(geojsonTileLayer);
