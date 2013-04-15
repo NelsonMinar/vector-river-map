@@ -5,4 +5,4 @@ import PIL.Image
 sys.modules['Image'] = PIL.Image
 
 import os, TileStache
-TileStache.cgiHandler(os.environ, 'tilestache.cfg', debug=False)
+TileStache.cgiHandler(os.environ, '../tilestache.cfg', debug=False)
