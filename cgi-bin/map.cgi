@@ -5,4 +5,9 @@ import PIL.Image
 sys.modules['Image'] = PIL.Image
 
 import os, TileStache
-TileStache.cgiHandler(os.environ, '../tilestache.cfg', debug=False)
+
+# Find config file; path varies depending on CGI environment
+for fn in ['tilestache.cfg', '../tilestache.cfg']:
+    if os.path.exists(fn):
+        break
+TileStache.cgiHandler(os.environ, fn, debug=False)
