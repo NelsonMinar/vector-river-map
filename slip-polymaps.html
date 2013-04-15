@@ -52,7 +52,7 @@ map.add(po.image()
     .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
 
 map.add(po.geoJson()
-    .url("map.cgi/riverst/{Z}/{X}/{Y}.json"));
+    .url("cgi-bin/map.cgi/riverst/{Z}/{X}/{Y}.json"));
 
 // Clamp the zoom range. Note: switchTo() will override this.
 map.zoomRange([0,30]);

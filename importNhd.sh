@@ -5,8 +5,10 @@
 
 set -eu
 
-shp=/home/nelson/geodata/NHD/NHDPlusCA/NHDPlus18/NHDSnapshot/Hydrography/NHDFlowline.shp
-vaa=/home/nelson/geodata/NHD/NHDPlusCA/NHDPlusAttributes/PlusFlowlineVAA.dbf
+export DYLD_FALLBACK_LIBRARY_PATH=/usr/homebrew/lib
+
+shp=/Volumes/nelson/geodata/NHD/NHDPlusCA/NHDPlus18/NHDSnapshot/Hydrography/NHDFlowline.shp
+vaa=/Volumes/nelson/geodata/NHD/NHDPlusCA/NHDPlusAttributes/PlusFlowlineVAA.dbf
 
 # Database
 createdb nhd

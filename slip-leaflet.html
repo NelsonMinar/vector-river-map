@@ -55,7 +55,7 @@ var basemap = L.tileLayer(esriRelief, {
 });
 basemap.addTo(map);
 
-var geojsonURL = "map.cgi/riverst/{z}/{x}/{y}.json";
+var geojsonURL = "cgi-bin/map.cgi/riverst/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
     { style: { "color": "#29439c", "weight": 1.5, opacity: 1.0, } });
 map.addLayer(geojsonTileLayer);
