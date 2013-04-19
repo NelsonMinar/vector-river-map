@@ -4,10 +4,11 @@ update nhdflowline set sphgeometry = ST_Transform(geom, 900913);
 
 -- create some indices on the important columns
 create index nhdflowline_sphgeometry_gist on nhdflowline using gist(sphgeometry);
-CREATE INDEX nhdflowline_comid_idx ON nhdflowline(comid);
-CREATE INDEX plusflowlinevaa_comid_idx ON plusflowlinevaa(comid);
+create index nhdflowline_comid_idx ON nhdflowline(comid);
+create index plusflowlinevaa_comid_idx ON plusflowlinevaa(comid);
 
 -- create a derived table that has the denormalized results for just our serving
+-- PostGIS is smart enough to set up the spatial column
 create table rivers as
   select gid,
          nhdflowline.comid,
@@ -19,9 +20,12 @@ create table rivers as
   where nhdflowline.comid = plusflowlinevaa.comid
     and nhdflowline.ftype != 'Coastline';
 
--- indices on the served columns
+alter table rivers add primary key (gid);
+
+-- spatial index on the served column
 create index rivers_geometry_gist on rivers using gist(geometry);
 
+-- analyze to give the query planner appropriate hints
 vacuum analyze nhdflowline;
 vacuum analyze plusflowlinevaa;
 vacuum analyze rivers;
