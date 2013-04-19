@@ -2,8 +2,8 @@
 
 import requests, time
 
-urlbase = 'http://192.168.0.7:9616'
-url = 'cgi-bin/map.cgi/riverst/8/41/98.json'
+urlbase = 'http://127.0.0.1:8000'
+url = 'riverst/8/41/98.json'
 
 start = time.time()
 r = requests.get("{}/{}".format(urlbase, url))
