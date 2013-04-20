@@ -60,3 +60,7 @@ done
 ### Run a SQL script to clean up the database and building indices
 echo "Building rivers table and useful indices"
 psql -d $DB -f processNhd.sql >> $LOG 2>&1
+
+### And print some stats
+echo -n "Total database size "
+psql -t -d $DB -c "select pg_size_pretty(pg_total_relation_size('rivers'));"  | head -1
