@@ -1,28 +1,23 @@
--- create some indices on the important columns
-create index nhdflowline_comid_idx ON nhdflowline(comid);
-create index plusflowlinevaa_comid_idx ON plusflowlinevaa(comid);
-
 -- create a derived table that has the denormalized results for just our serving
 -- Tilestache requires the geometry column be named 'geometry'
--- PostGIS is smart enough to set up the spatial column metadata with this command
+-- PostGIS 9.1 is smart enough to set up the spatial column metadata for us
 create table rivers as
-  select gid,
-         nhdflowline.comid,
-         cast(streamorde as int8) as strahler,
+  select nhdflowline.comid,
+         cast(streamorde as int8) as strahler,   -- TileStache doesn't do DECIMAL()
          gnis_name as name,
          ftype as ftype,
-         ST_Transform(geom, 900913) as geometry
+         ST_Transform(geom, 900913) as geometry  -- Spherical Mercator for web maps
   from nhdflowline, plusflowlinevaa
   where nhdflowline.comid = plusflowlinevaa.comid
     and nhdflowline.ftype != 'Coastline';
 
-alter table rivers add primary key (gid);
-
 -- indices on our derived table
 create index rivers_geometry_gist on rivers using gist(geometry);
-create index rivers_comid_idx ON rivers(comid);
+create index rivers_strahler_idx ON rivers(strahler);
 
 -- analyze to give the query planner appropriate hints
-vacuum analyze nhdflowline;
-vacuum analyze plusflowlinevaa;
 vacuum analyze rivers;
+
+-- we could drop these tables, but it's nice to leave them around
+-- drop table nhdflowline;
+-- drop table plusflowlinevaa;

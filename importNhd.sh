@@ -1,25 +1,62 @@
 #!/bin/bash
 
-# Load the Flowlines database into PostGIS
+# Load the Flowlines databases into PostGIS
 # See also https://gist.github.com/mojodna/b1f169b33db907f2b8dd
 
-set -eu
-
-DB=rivers
+### XXX only for Nelson's weird environment
 export DYLD_FALLBACK_LIBRARY_PATH=/usr/homebrew/lib
 
-shp=/Users/nelson/geodata/NHD/NHDPlusCA/NHDPlus18/NHDSnapshot/Hydrography/NHDFlowline.shp
-vaa=/Users/nelson/geodata/NHD/NHDPlusCA/NHDPlusAttributes/PlusFlowlineVAA.dbf
+### Defensive shell scripting
+set -eu
 
-# Create a PostGIS database
-createdb $DB
-psql -d $DB -c 'create extension postgis'
-psql -d $DB -c 'create extension postgis_topology'
+### Configurable variables
+DATADIR=$HOME/geodata/nhd/bulk
+DB=rivers
 
-# Import data tables from NHD
-shp2pgsql -t 2d -s 4269 -I -D -W LATIN1 "$shp" | pv | psql -d $DB -q
-pgdbf -s LATIN1 "$vaa" | psql -d $DB -q
+### Set up logging
+LOG=`mktemp /tmp/nhd.log.XXXXXX`
+echo "Script output logging to $LOG"
 
-# Run our script
+### Create a PostGIS database
+FAIL=0; createdb $DB || FAIL=1 && true
+if [ "$FAIL" -ne 0 ]; then
+    echo "You need to 'dropdb $DB' for this script to run"
+    exit
+fi
+psql -q -d $DB -c 'create extension postgis'
+psql -q -d $DB -c 'create extension postgis_topology'
 
-psql -d $DB -f processNhd.sql
+### Import NHDFlowline tables
+# Find the data files
+flowlines="$DATADIR/NHDPlus??/NHDPlus*/NHDSnapshot/Hydrography/NHDFlowline.shp"
+
+# Create the schema based on the first file
+set -- $flowlines
+echo "Creating nhdflowline schema"
+(shp2pgsql -p -D -t 2d -s 4269 -W LATIN1 "$1" | psql -d $DB -q) >> $LOG 2>&1
+
+# Import the files
+for flowline in $flowlines; do
+    echo "Importing $flowline"
+    (shp2pgsql -a -D -t 2d -s 4269 -W LATIN1 "$flowline" | psql -d $DB -q) >> $LOG 2>&1
+done
+
+### Import PlusFlowlineVAA
+# Find the data files
+vaas="$DATADIR/NHDPlus??/NHDPlus*/NHDPlusAttributes/PlusFlowlineVAA.dbf"
+
+# Create the schema based on the first file
+set -- $vaas
+echo "Creating plusflowlinevaa schema"
+(pgdbf -D -s LATIN1 "$1" | psql -d $DB -q) >> $LOG 2>&1
+psql -d $DB -c "TRUNCATE TABLE plusflowlinevaa;" >> $LOG 2>&1
+
+# Import the files
+for vaa in $vaas; do
+    echo "Importing $vaa"
+    (pgdbf -CD -s LATIN1 "$vaa" | psql -d $DB -q) >> $LOG 2>&1
+done
+
+### Run a SQL script to clean up the database and building indices
+echo "Building rivers table and useful indices"
+psql -d $DB -f processNhd.sql >> $LOG 2>&1
