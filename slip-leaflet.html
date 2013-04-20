@@ -34,7 +34,7 @@ body {
 var hucNames = {}
 
 // Construct map, center if no location provided
-var map = L.map('map');
+var map = L.map('map', { maxZoom: 13 } );
 var hash = new L.Hash(map);
 if (!window.location.hash) {
     map.setView([37.958, -120.976], 8);
@@ -48,15 +48,33 @@ var stamenToner = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png'
 var mapboxWarden = 'http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-warden/{z}/{x}/{y}.png'
 var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'
 var mapboxRelief = 'http://{s}.tiles.mapbox.com/v3/bobbysud.map-k57i9ckm/{z}/{x}/{y}.png?updated=6adc45a'
+
 var basemap = L.tileLayer(esriRelief, {
         attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
-        maxZoom: 17
+        maxZoom: 13
 });
 basemap.addTo(map);
 
+function riverStyle(feature) {
+    return { "color": "#29439c",
+              "weight": feature.properties.strahler / 2.0,
+              opacity: 1.0, };
+}
+
 var geojsonURL = "http://127.0.0.1:8000/riverst/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
-    { style: { "color": "#29439c", "weight": 1.5, opacity: 1.0, } });
+    { style: riverStyle,
+      onEachFeature: function (feature, layer) {
+          if (feature.properties) {
+              var popupString = '<div class="popup">';
+              for (var k in feature.properties) {
+                  var v = feature.properties[k];
+                  popupString += k + ': ' + v + '<br />';
+              }
+              popupString += '</div>';
+              layer.bindPopup(popupString);
+          }
+}});
 map.addLayer(geojsonTileLayer);
 
 </script>
