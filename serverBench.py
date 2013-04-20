@@ -13,8 +13,7 @@ end = time.time()
 assert r.status_code == 200
 j = r.json()
 assert j["type"] == "FeatureCollection"
-assert len(j["features"]) == 1285
-assert j["features"][0]["geometry"]["coordinates"][0][0] == -121.721604
+assert len(j["features"]) > 0
 
 print("Single request took {:.0f} ms".format(1000 * (end-start)))
 
