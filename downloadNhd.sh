@@ -82,10 +82,10 @@ done
 
 # Extract the datafiles we need. Would be nice to only do this if they don't exist
 for nhd in *NHDSnapshot*7z; do
-    7z -y x "$nhd" '*/*/NHDSnapshot/Hydrography/NHDFlowline*' | grep Extracting
+    7z -y x "$nhd" '*/*/NHDSnapshot/Hydrography/NHDFlowline*' | grep Extracting || true
 done
 for vaa in *NHDPlusAttributes*7z; do
-    7z -y x "$vaa" '*/*/NHDPlusAttributes/PlusFlowlineVAA.dbf' | grep Extracting
+    7z -y x "$vaa" '*/*/NHDPlusAttributes/PlusFlowlineVAA.dbf' | grep Extracting || true
 done
 
 echo
