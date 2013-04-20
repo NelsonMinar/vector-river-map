@@ -11,8 +11,8 @@
 set -eu
 
 DESTDIR=$HOME/geodata/NHD/bulk/
-# If you want to do a test run for California only, uncomment this
-CAONLY=true
+# If you want to do a test run for California only, set this to true
+CAONLY=false
 
 # URLs of data, painstakingly copied out of the web page. Could automate with a scraper
 URLS=`cat << EOF
@@ -60,7 +60,7 @@ http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusNE/NHDPlusV21_
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusNE/NHDPlusV21_NE_01_NHDPlusAttributes_03.7z
 EOF`
 
-if [ -n "$CAONLY" ]; then
+if [ "$CAONLY" == "true" ]; then
     URLS="http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDSnapshot_04.7z http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDPlusAttributes_03.7z"
 fi
 
