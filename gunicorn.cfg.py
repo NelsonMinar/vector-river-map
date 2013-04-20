@@ -9,4 +9,4 @@ sys.modules['Image'] = PIL.Image
 bind='127.0.0.1:8000'
 
 workers=4
-# worker_class='gevent'
+# worker_class='gevent'      # gevent seems slower, not necessary witha  proxy in front

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+"""A very simple test + benchmark for serving vector tiles"""
+
 import requests, time, grequests
 
 urlbase = 'http://127.0.0.1:8000'
