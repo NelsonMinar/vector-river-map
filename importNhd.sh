@@ -17,6 +17,10 @@ DB=rivers
 LOG=`mktemp /tmp/nhd.log.XXXXXX`
 echo "Script output logging to $LOG"
 
+
+### Simple time statistic
+start=`date +%s`
+
 ### Create a PostGIS database
 FAIL=0; createdb $DB || FAIL=1 && true
 if [ "$FAIL" -ne 0 ]; then
@@ -62,5 +66,7 @@ echo "Building rivers table and useful indices"
 psql -d $DB -f processNhd.sql >> $LOG 2>&1
 
 ### And print some stats
-echo -n "Total database size "
+end=`date +%s`
+echo -n "Total database size"
 psql -t -d $DB -c "select pg_size_pretty(pg_total_relation_size('rivers'));"  | head -1
+echo "Total time:" $[end-start] "seconds"
