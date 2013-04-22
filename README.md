@@ -64,23 +64,29 @@ keeps features intact.
 <h2>Required server software</h2>
 
 The following is a partial list of software you need installed on your Mac or Linux system to generate
-and serve these maps. (Sorry, Windows users; a Unix machine is a better choice for a server.) On the Mac,
+and serve these maps. (Sorry, Windows users; a Unix machine is a better choice for this kind of work.) On the Mac,
 most prerequisites are available via [Homebrew](http://mxcl.github.io/homebrew/). On Ubuntu they are
-available via `apt-get`, although the more recent versions from the [UbuntuGIS PPA](https://wiki.ubuntu.com/UbuntuGIS) are highly recommended. Other Linux distributions can probably install the required software via the usual package.
+available via `apt-get`, although the more recent versions from the [UbuntuGIS PPA](https://wiki.ubuntu.com/UbuntuGIS) are  recommended. Other Linux distributions can probably install the required software via the usual package system.
 In general I prefer to install Python code with [pip](http://www.pip-installer.org/en/latest/) rather
 than rely on the Mac or Ubuntu package versions.
 
 * [curl](http://curl.haxx.se/) for downloading NHDPlus data from the web.
 * [p7zip](http://p7zip.sourceforge.net/) for unpacking NHDPlus data. Ubuntu users be sure to install `p7zip-full`.
 * [PostgreSQL](http://www.postgresql.org/) and [PostGIS](http://postgis.refractions.net/) for a geospatial database.
-I've only tested with PostGIS 2.0, but the code should be compatible with older verisons.
+* `shp2pgsql`, part of PostGIS, for importing ESRI shapefiles into PostGIS
+* [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Unfortunately the Ubuntu/precise
+version 0.5.5 does not have the `-s` flag needed for handling non-ASCII data. Install from
+[sources](http://sourceforge.net/projects/pgdbf/files/pgdbf/) or insure you're
+getting version 0.6.* from somewhere.
 * [gunicorn](http://gunicorn.org/) for a Python web app server.
 * [nginx](http://nginx.org/) for a front-end web proxy to talk to the outside world. Not strictly necessary,
 but Gunicorn is designed with a front-end in mind.
 * [TileStache](http://tilestache.org/) for the Python web app that serves map tiles. TileStache has
-several undocumented dependencies including [Shapely](https://pypi.python.org/pypi/Shapely) and
+undocumented dependencies on [Shapely](https://pypi.python.org/pypi/Shapely) and
 [psycopg2](http://initd.org/psycopg/).
 * [requests](http://docs.python-requests.org/en/latest/) and [grequests](https://github.com/kennethreitz/grequests) for `serverBench.py`, a Python HTTP client test.
+* [gdal](http://www.gdal.org/) is the low level library for open source geo. The parts you need will be installed
+as dependencies by the tools above, listing it here for proper respect.
 
 
 <h2>Map components</h2>
