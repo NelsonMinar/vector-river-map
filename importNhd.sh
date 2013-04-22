@@ -10,7 +10,7 @@ export DYLD_FALLBACK_LIBRARY_PATH=/usr/homebrew/lib
 set -eu
 
 ### Configurable variables
-DATADIR=$HOME/geodata/nhd/bulk
+DATADIR=$HOME/geodata/NHD/bulk
 DB=rivers
 
 ### Set up logging
