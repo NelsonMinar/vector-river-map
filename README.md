@@ -27,7 +27,7 @@ is constructed, and be sure to [check out the source code]().
 * Run `importNhd.sh` to bring data into PostGIS
 * Run `serve.sh` to start TileStache in Gunicorn
 * Run `serverTest.py` to do a quick test on the server
-* Load `slip-leaflet.html` to view the map
+* Load `rivers-leaflet.html` or `rivers-polymaps.html` to view the map
 
 <h2>About vector tiles</h2>
 
