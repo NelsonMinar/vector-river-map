@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
 
-<title>Leaflet HUC map</title>
+<title>Leaflet vector tile map of rivers</title>
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
 <!--[if lte IE 8]>
@@ -22,6 +22,10 @@ body {
     overflow: hidden;
     background-color: #f00;
 }
+.leaflet-popup-content-wrapper {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
 </style>
 
 </head><body>
@@ -30,9 +34,6 @@ body {
 
 <script type="text/javascript">
 
-// Global dictionary of HUC names
-var hucNames = {}
-
 // Construct map, center if no location provided
 var map = L.map('map', { maxZoom: 13 } );
 var hash = new L.Hash(map);
@@ -40,14 +41,8 @@ if (!window.location.hash) {
     map.setView([37.958, -120.976], 8);
 }
 
-// Make the base map (various candidate tilesets)
-var googleTerrain = 'http://mts1.google.com/vt/lyrs=t@130,r&hl=en&src=app&x={x}&y={y}&z={z}&s=G';
-var stamenTerrain = 'http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png'
-var stamenBgTerrain = 'http://{s}.tile.stamen.com/terrain-background/{z}/{x}/{y}.png'
-var stamenToner = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png'
-var mapboxWarden = 'http://{s}.tiles.mapbox.com/v3/mapbox.mapbox-warden/{z}/{x}/{y}.png'
+// Make the base map; a raster tile relief map from ESRI
 var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'
-var mapboxRelief = 'http://{s}.tiles.mapbox.com/v3/bobbysud.map-k57i9ckm/{z}/{x}/{y}.png?updated=6adc45a'
 
 var basemap = L.tileLayer(esriRelief, {
         attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
@@ -55,22 +50,21 @@ var basemap = L.tileLayer(esriRelief, {
 });
 basemap.addTo(map);
 
+// Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
     return { "color": "#29439c",
-              "weight": feature.properties.strahler / 2.0,
+              "weight": feature.properties.s / 2.0,
               opacity: 1.0, };
 }
 
+// Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 var geojsonURL = "http://127.0.0.1:8000/riverst/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
     { style: riverStyle,
       onEachFeature: function (feature, layer) {
           if (feature.properties) {
               var popupString = '<div class="popup">';
-              for (var k in feature.properties) {
-                  var v = feature.properties[k];
-                  popupString += k + ': ' + v + '<br />';
-              }
+              popupString += '<b>' + feature.properties.n + '</b><br>';
               popupString += '</div>';
               layer.bindPopup(popupString);
           }
