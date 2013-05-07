@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html><head>
 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
-<title>Maps</title>
+<title>Polymaps vector tile map of rivers</title>
 <script type="text/javascript" src="lib/polymaps.js"></script>
 
 <style type="text/css">
@@ -20,7 +20,7 @@ body {
 .compass .active .chevron, .compass .chevron.active { stroke: #fff; }
 .compass.active .active .direction { fill: #999; }
 
-path { fill: none; stroke: #29439c; }
+path { fill: none; }
 
 </style>
 </head>
@@ -42,23 +42,34 @@ var map = po.map()
     .add(po.wheel().smooth(false))
     .add(po.hash())
     .add(po.touch().rotate(false));
+map.zoomRange([0,13]);
 
+// Center view if no location provided
 if (!mapLocationInUrl) {
     map.center({lon: -120.976, lat: 37.958});
     map.zoom(8);
 }
 
+// Make the base map; a raster tile relief map from ESRI
 map.add(po.image()
     .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
 
+// Add a single GeoJSON vector file for state boundaries
+map.add(po.geoJson()
+    .url("us-states.json")
+    .tile(false).clip(false)
+    .on("load", po.stylist()
+      .attr("stroke", "#444")
+      .attr("opacity", 1)
+      .attr("stroke-width", "1px")));
+
+// Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 map.add(po.geoJson()
     .url("http://127.0.0.1:8000/riverst/{Z}/{X}/{Y}.json")
     .on("load", po.stylist()
+      .attr("stroke", "#29439c")
+      .attr("opacity", 1)
       .attr("stroke-width", function(d) { return (d.properties.s / 2.0) + "px"; })));
-
-// Clamp the zoom range. Note: switchTo() will override this.
-map.zoomRange([0,30]);
-
 
 </script>
 </body></html>

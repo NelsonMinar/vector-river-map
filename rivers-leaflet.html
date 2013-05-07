@@ -12,6 +12,7 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 <script src="lib/leaflet-hash.js"></script>
 <script src="lib/TileLayer.GeoJSON.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 
 <style type="text/css">
 html, body { height: 100% }
@@ -50,11 +51,21 @@ var basemap = L.tileLayer(esriRelief, {
 });
 basemap.addTo(map);
 
+// Add a single GeoJSON vector file for state boundaries
+jQuery.ajax('us-states.json').done(function(states) {
+    var stateLayer = new L.geoJson(states);
+    stateLayer.setStyle({ "color": "#444",
+                          "weight": 1,
+                          "fill": false,
+                          "opacity": 1.0 });
+    stateLayer.addTo(map);
+});
+
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
     return { "color": "#29439c",
-              "weight": feature.properties.s / 2.0,
-              opacity: 1.0, };
+             "weight": feature.properties.s / 2.0,
+             "opacity": 1.0, };
 }
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
