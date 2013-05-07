@@ -20,7 +20,7 @@ body {
 .compass .active .chevron, .compass .chevron.active { stroke: #fff; }
 .compass.active .active .direction { fill: #999; }
 
-path { fill: none; stroke: #29439c; stroke-width: 1.5px }
+path { fill: none; stroke: #29439c; }
 
 </style>
 </head>
@@ -52,7 +52,9 @@ map.add(po.image()
     .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
 
 map.add(po.geoJson()
-    .url("http://127.0.0.1:8000/riverst/{Z}/{X}/{Y}.json"));
+    .url("http://127.0.0.1:8000/riverst/{Z}/{X}/{Y}.json")
+    .on("load", po.stylist()
+      .attr("stroke-width", function(d) { return (d.properties.s / 2.0) + "px"; })));
 
 // Clamp the zoom range. Note: switchTo() will override this.
 map.zoomRange([0,30]);
