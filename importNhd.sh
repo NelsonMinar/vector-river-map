@@ -5,9 +5,11 @@
 
 ### Workaround for a bug with a non-standard Homebrew install
 ### https://github.com/mxcl/homebrew/issues/19213
-BREWDIR=`brew --prefix`
-if [ -n "$BREWDIR" -a "$BREWDIR" != "/usr/local" ]; then
-    export DYLD_FALLBACK_LIBRARY_PATH="$BREWDIR/lib"
+if type brew 2> /dev/null; then
+    BREWDIR=`brew --prefix`
+    if [ "$BREWDIR" != "/usr/local" ]; then
+        export DYLD_FALLBACK_LIBRARY_PATH="$BREWDIR/lib"
+    fi
 fi
 
 ### Defensive shell scripting
