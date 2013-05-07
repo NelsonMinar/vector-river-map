@@ -9,6 +9,10 @@ See the [live map here](http://www.somebits.com/~nelson/tmp/rivers/)
 
 <div style="background-color: #ffd"><b>Prerelease version</b>, not yet complete.</div>
 
+Many thanks to [Mike Migurski](http://mike.teczno.com/),
+[Seth Fitzsimmons](https://github.com/mojodna), and
+[Mike Bostock](http://bost.ocks.org/mike/) for feedback and help.
+
 -----------
 
 This project contains everything you need from start to finish to make a
