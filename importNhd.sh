@@ -3,20 +3,23 @@
 # Load the Flowlines databases into PostGIS
 # See also https://gist.github.com/mojodna/b1f169b33db907f2b8dd
 
-### XXX only for Nelson's weird environment
-export DYLD_FALLBACK_LIBRARY_PATH=/usr/homebrew/lib
+### Workaround for a bug with a non-standard Homebrew install
+### https://github.com/mxcl/homebrew/issues/19213
+BREWDIR=`brew --prefix`
+if [ -n "$BREWDIR" -a "$BREWDIR" != "/usr/local" ]; then
+    export DYLD_FALLBACK_LIBRARY_PATH="$BREWDIR/lib"
+fi
 
 ### Defensive shell scripting
 set -eu
 
 ### Configurable variables
-DATADIR=$HOME/geodata/NHD/bulk
+DATADIR=./NHD
 DB=rivers
 
 ### Set up logging
 LOG=`mktemp /tmp/nhd.log.XXXXXX`
 echo "Script output logging to $LOG"
-
 
 ### Simple time statistic
 start=`date +%s`

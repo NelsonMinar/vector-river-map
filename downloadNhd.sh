@@ -10,9 +10,9 @@
 
 set -eu
 
-DESTDIR=$HOME/geodata/NHD/bulk/
+DESTDIR=./NHD
 # If you want to do a test run for California only, set this to true
-CAONLY=false
+CAONLY=true
 
 # URLs of data, painstakingly copied out of the web page. Could automate with a scraper
 URLS=`cat << EOF
@@ -60,6 +60,7 @@ http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusNE/NHDPlusV21_
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusNE/NHDPlusV21_NE_01_NHDPlusAttributes_03.7z
 EOF`
 
+# Override URLS to a shorter list if just doing California
 if [ "$CAONLY" == "true" ]; then
     URLS="http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDSnapshot_04.7z http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDPlusAttributes_03.7z"
 fi
@@ -80,7 +81,7 @@ for url in $URLS; do
     fi
 done
 
-# Extract the datafiles we need. Would be nice to only do this if they don't exist
+# Extract the datafiles we need from the downloads. Would be nice to only do this if they don't exist
 for nhd in *NHDSnapshot*7z; do
     7z -y x "$nhd" '*/*/NHDSnapshot/Hydrography/NHDFlowline*' | grep Extracting || true
 done
