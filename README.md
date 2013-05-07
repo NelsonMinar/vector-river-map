@@ -26,7 +26,7 @@ is constructed, and be sure to [check out the source code]().
 * Run `downloadNhd.sh` to get data
 * Run `importNhd.sh` to bring data into PostGIS
 * Run `serve.sh` to start TileStache in Gunicorn
-* Run `serverBench.py` to do a quick test on the server
+* Run `serverTest.py` to do a quick test on the server
 * Load `slip-leaflet.html` to view the map
 
 <h2>About vector tiles</h2>
@@ -84,7 +84,7 @@ but Gunicorn is designed with a front-end in mind.
 * [TileStache](http://tilestache.org/) for the Python web app that serves map tiles. TileStache has
 undocumented dependencies on [Shapely](https://pypi.python.org/pypi/Shapely) and
 [psycopg2](http://initd.org/psycopg/).
-* [requests](http://docs.python-requests.org/en/latest/) and [grequests](https://github.com/kennethreitz/grequests) for `serverBench.py`, a Python HTTP client test.
+* [requests](http://docs.python-requests.org/en/latest/) and [grequests](https://github.com/kennethreitz/grequests) for `serverTest.py`, a Python HTTP client test.
 * [gdal](http://www.gdal.org/) is the low level library for open source geo. The parts you need will be installed
 as dependencies by the tools above, listing it here for proper respect.
 
