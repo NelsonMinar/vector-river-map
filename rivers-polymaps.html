@@ -3,7 +3,7 @@
 <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
 <title>Polymaps vector tile map of rivers</title>
 <script type="text/javascript" src="lib/polymaps.js"></script>
-
+<script type="text/javascript" src="us-states.js"></script>
 <style type="text/css">
 body {
   margin: 0;
@@ -58,8 +58,9 @@ map.add(po.image()
     .url("http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{Z}/{Y}/{X}"));
 
 // Add a single GeoJSON vector file for state boundaries
+// This was loaded statically as a script; could also be AJAX
 map.add(po.geoJson()
-    .url("us-states.json")
+    .features(usStates.features)
     .tile(false).clip(false)
     .on("load", po.stylist()
       .attr("stroke", "#444")

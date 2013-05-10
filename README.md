@@ -50,6 +50,7 @@ constructed, and be sure to
 * Run `downloadNhd.sh` to get data
 * Run `importNhd.sh` to bring data into PostGIS
 * Run `serve.sh` to start TileStache in Gunicorn
+* Load http://localhost:8000/riverst/13/1316/3169.json to verify GeoJSON tiles are being served
 * Run `serverTest.py` to do a quick test on the server
 * Load `rivers-leaflet.html` or `rivers-polymaps.html` to view the map
 

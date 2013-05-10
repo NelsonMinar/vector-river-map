@@ -12,7 +12,7 @@
 <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 <script src="lib/leaflet-hash.js"></script>
 <script src="lib/TileLayer.GeoJSON.js"></script>
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="us-states.js"></script>
 
 <style type="text/css">
 html, body { height: 100% }
@@ -56,14 +56,14 @@ var basemap = L.tileLayer(esriRelief, {
 basemap.addTo(map);
 
 // Add a single GeoJSON vector file for state boundaries
-jQuery.ajax('us-states.json').done(function(states) {
-    var stateLayer = new L.geoJson(states);
-    stateLayer.setStyle({ "color": "#444",
-                          "weight": 1,
-                          "fill": false,
-                          "opacity": 1.0 });
-    stateLayer.addTo(map);
-});
+// This was loaded statically as a script; could also be AJAX
+var stateLayer = new L.geoJson(usStates);
+stateLayer.setStyle({ "color": "#444",
+                      "weight": 1,
+                      "fill": false,
+                      "opacity": 1.0 });
+stateLayer.addTo(map);
+
 
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
