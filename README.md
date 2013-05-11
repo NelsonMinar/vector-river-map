@@ -70,11 +70,14 @@ smaller, and more flexible.
 Vector tiles are starting to catch on in proprietary applications; for
 instance most mobile maps are now rendered with vector data for a more
 efficient, more beautiful rendering. Vector
-mapping in the open source world is still a bit obscure. The
-[Polymaps](http://polymaps.org/) Javascript library was an early pioneer in
-rendering vector tiles but that capability has been seldom used, in part
-because generating vector tiles was difficult. Now vector tile servers are
-starting to become more common. This tutorial relies on [TileStache's VecTiles
+mapping in the open source world is still a bit obscure. There are several
+open source vector renderers: the
+[Polymaps](http://polymaps.org/) Javascript library was an early pioneer,
+[MapsForge](https://code.google.com/p/mapsforge/) is a nice open source
+vector renderer for Android, and
+[MapBox 2](http://mapbox.com/blog/vector-tiles-tilemill2-preview/) inclues
+a vector tile stack. Serving vector tiles has been less common, but
+is starting to become easier. This tutorial relies on [TileStache's VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html) to
 serve our own prepared geodata.
 [OpenStreetMap is also experimenting](http://wiki.openstreetmap.org/wiki/Vector_tiles)
@@ -113,7 +116,9 @@ The following is a partial list of software you need installed on your Unix
 system to generate and serve these maps. (Sorry Windows users, Unix is a
 better choice for this kind of work.) I've tested with both MacOS and Ubuntu.
 On the Mac, most prerequisites are available via
-[Homebrew](http://mxcl.github.io/homebrew/). On Ubuntu many are available via
+[Homebrew](http://mxcl.github.io/homebrew/) (see also this
+[guide to open source geo on the Mac](https://github.com/nvkelso/geo-how-to/wiki/Installing-Open-Source-Geo-Software:-Mac-Edition).
+On Ubuntu many are available via
 `apt-get`, although the more recent versions from the [UbuntuGIS
 PPA](https://wiki.ubuntu.com/UbuntuGIS) are recommended. Other Linux
 distributions can probably install the required software via their native
@@ -180,7 +185,7 @@ options](http://docs.gunicorn.org/en/latest/configure.html).
 with a disk cache in `/tmp/stache`. It uses the [VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html), the
 magic in TileStache that takes care of doing PostGIS queries and serving back
-nicely cropped GeoJSON tiles. At this layer we start making singinficant
+nicely cropped GeoJSON tiles. At this layer we start making significant
 cartographic decisions.
 
 * `serverTest.py` is a very simple Python client test that inspects a few
