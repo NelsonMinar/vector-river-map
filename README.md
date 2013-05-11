@@ -90,8 +90,7 @@ simplified and down-sampled to match pixel visibility.
 
 Vector tiles are ultimately quite simple: take a look at [this tile near near
 Oakland](http://somebits.com:8001/riverst/13/1316/3169.json). The [URL naming
-system](http://www.maptiler.org/google-maps-coordinates-tile-bounds-
-projection/) is exactly like Google's convention for raster map tiles:
+system](http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/) is exactly like Google's convention for raster map tiles:
 this tile is at z=13, x=1316, y=3169.
 Only instead of serving a PNG image the URL results in a
 [GeoJSON file](http://www.geojson.org/) describing the geometry inside the
@@ -266,4 +265,3 @@ for smaller bandwidth.
 
 * Convert to TopoJSON for smaller encoding. Even without shared topology
 TopoJSON encoding can be significantly smaller than equivalent GeoJSON.
-
