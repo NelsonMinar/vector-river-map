@@ -57,7 +57,7 @@ constructed, and be sure to
 ## About vector tiles
 
 Vector tiles are an exciting, underutilized idea to make flexible and
-efficient web app. Google Maps revolutioned online cartography by
+efficient web apps. Google Maps revolutioned online cartography by
 popularizing the use of [map tiles](http://www.maptiler.org/google-maps-
 coordinates-tile-bounds-projection/) to serve "slippy maps" with excellent
 quality and interactivity. Most slippy maps are raster maps, essentially a
