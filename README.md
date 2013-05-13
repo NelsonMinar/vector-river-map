@@ -75,7 +75,7 @@ open source vector renderers: the
 [Polymaps](http://polymaps.org/) Javascript library was an early pioneer,
 [MapsForge](https://code.google.com/p/mapsforge/) is a nice open source
 vector renderer for Android, and
-[MapBox 2](http://mapbox.com/blog/vector-tiles-tilemill2-preview/) inclues
+[MapBox 2](http://mapbox.com/blog/vector-tiles/) is based on
 a vector tile stack. Serving vector tiles has been less common, but
 is starting to become easier. This tutorial relies on [TileStache's VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html) to
