@@ -15,12 +15,12 @@ start = time.time()
 
 def log(msg):
     "Log a message with some reporting on time elapsed"
-    print "{:>6.2f}s {}".format(time.time()-start, msg)
+    print "{:>7.2f}s {}".format(time.time()-start, msg)
 
 # Create the schema
-cur.execute("""drop table if exists rivers4;""")
+cur.execute("""drop table if exists merged_rivers;""")
 cur.execute("""
-create table rivers4 (
+create table merged_rivers (
     gnis_id integer,
     name varchar(65),
     strahler smallint,
@@ -38,12 +38,12 @@ insertCursor = conn.cursor()
 # Iterate through each unique gnis_id and create rows in
 # our new database that are merged copies of that record
 # In theory this could all be done with one grand
-# create table from select...
+#   create table from select...
 # but in practice PostGIS didn't seem to do well with that.
 cur.execute("select distinct(gnis_id) from rivers;")
 for (gnisId,) in cur:
     insertCursor.execute("""
-        insert into rivers4(gnis_id, name, strahler, geometry)
+        insert into merged_rivers(gnis_id, name, strahler, geometry)
         select
             MAX(gnis_id) as gnis_id,
             MAX(name) as name,
@@ -58,7 +58,7 @@ for (gnisId,) in cur:
         log("{} to go {} rows added for gnis_id {}".format(count, insertCursor.rowcount, gnisId))
 
 # Merging via gnis_is means we discard all rivers where gnis_id is null.
-# That's a bug; it's a lot of rivers.
+# That's a bug; it's a lot of real rivers. So secondarily we
 # We can simply copy them in, but it's a lot of bloat. Would be nice to merge.
 # insert into rivers3(gnis_id, name, strahler, geometry) select  gnis_id, name, strahler, geometry from rivers where gnis_id is null;
 
@@ -67,12 +67,12 @@ conn.commit()
 
 # Build some indices
 log("Creating indices")
-insertCursor.execute("create index rivers4_geometry_gist on rivers4 using gist(geometry);")
-insertCursor.execute("create index rivers4_strahler_idx ON rivers4(strahler);")
+insertCursor.execute("create index merged_rivers_geometry_gist on merged_rivers using gist(geometry);")
+insertCursor.execute("create index merged_rivers_strahler_idx ON merged_rivers(strahler);")
 conn.commit()
 
 # Can't vacuum in a transaction
 conn.set_isolation_level(0)
-insertCursor.execute("vacuum analyze rivers4;")
+insertCursor.execute("vacuum analyze merged_rivers;")
 
 log("All done!")
