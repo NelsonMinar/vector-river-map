@@ -69,7 +69,7 @@ map.add(po.geoJson()
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
 map.add(po.geoJson()
-    .url("http://127.0.0.1:8000/riverst/{Z}/{X}/{Y}.json")
+    .url("http://127.0.0.1:8000/mergedRivers/{Z}/{X}/{Y}.json")
     .on("load", po.stylist()
       .attr("stroke", "#29439c")
       .attr("opacity", 1)

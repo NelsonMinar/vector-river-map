@@ -64,7 +64,6 @@ stateLayer.setStyle({ "color": "#444",
                       "opacity": 1.0 });
 stateLayer.addTo(map);
 
-
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
     return { "color": "#29439c",
@@ -73,15 +72,20 @@ function riverStyle(feature) {
 }
 
 // Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
-var geojsonURL = "http://127.0.0.1:8000/riverst/{z}/{x}/{y}.json";
+var geojsonURL = "http://127.0.0.1:8000/mergedRivers/{z}/{x}/{y}.json";
 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
     { style: riverStyle,
       onEachFeature: function (feature, layer) {
           if (feature.properties) {
-              var popupString = '<div class="popup">';
-              popupString += '<b>' + feature.properties.n + '</b><br>';
-              popupString += '</div>';
-              layer.bindPopup(popupString);
+              var popupString = [];
+              popupString.push('<div class="popup">');
+              popupString.push('<b>', feature.properties.n, '</b><br>');
+              popupString.push('HUC8: ');
+              popupString.push('<a target="_blank" href="http://water.usgs.gov/lookup/getwatershed?',
+                               feature.properties.h,
+                               '">', feature.properties.h, '</a><br>');
+              popupString.push('</div>');
+              layer.bindPopup(popupString.join(''));
           }
 }});
 map.addLayer(geojsonTileLayer);
