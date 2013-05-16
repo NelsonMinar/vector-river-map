@@ -67,11 +67,17 @@ for vaa in $vaas; do
 done
 
 ### Run a SQL script to clean up the database and building indices
-echo "Building rivers table and useful indices"
+echo "Building rivers table from downloaded files"
 psql -d $DB -f processNhd.sql >> $LOG 2>&1
+
+### Run a Python script to merge rivers for serving
+echo "Creating the merged_rivers table from rivers"
+python -u mergeRivers.py
 
 ### And print some stats
 end=`date +%s`
-echo -n "Total database size"
+echo -n "Size of rivers table: "
 psql -t -d $DB -c "select pg_size_pretty(pg_total_relation_size('rivers'));"  | head -1
+echo -n "Size of merged_rivers table: "
+psql -t -d $DB -c "select pg_size_pretty(pg_total_relation_size('merged_rivers'));"  | head -1
 echo "Total time:" $[end-start] "seconds"

@@ -81,6 +81,8 @@ for url in $URLS; do
     fi
 done
 
+echo "All files downloaded; extracting NHDFlowline and PlusFlowlineVAA"
+
 # Extract the datafiles we need from the downloads. Would be nice to only do this if they don't exist
 for nhd in *NHDSnapshot*7z; do
     7z -y x "$nhd" '*/*/NHDSnapshot/Hydrography/NHDFlowline*' '*/*/NHDSnapshot/Hydrography/nhdflowline*' | grep Extracting || true
