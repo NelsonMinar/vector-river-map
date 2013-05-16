@@ -6,7 +6,7 @@ import requests, time, grequests
 
 urlbase = 'http://127.0.0.1:8000'
 for spot in ('7/25/49', '6/13/23', '5/6/11', '5/7/12', '4/3/6'):
-    url = "{}/mergedRivers/{}.json".format(urlbase, spot);
+    url = "{}/rivers/{}.json".format(urlbase, spot);
     start = time.time()
     r = requests.get(url)
     l = len(r.content);

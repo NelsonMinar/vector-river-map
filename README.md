@@ -50,7 +50,7 @@ detailed development notes on
 
 For client authors, the vector tiles are available as a service with
 the URL pattern
-`http://somebits.com:8000/mergedRivers/{z}/{x}/{y}.json`.
+`http://somebits.com:8000/rivers/{z}/{x}/{y}.json`.
 Light use only please; the server is not provisioned for real traffic.
 
 ## Quick start
@@ -58,8 +58,9 @@ Light use only please; the server is not provisioned for real traffic.
 * Install <a href="#server-prerequisites">required software</a>.
 * Run `downloadNhd.sh` to get data.
 * Run `importNhd.sh` to bring data into PostGIS.
-* Run `serve.sh` to start TileStache in Gunicorn.
-* Load http://localhost:8000/riverst/13/1316/3169.json to verify GeoJSON tiles are being served.
+* Run `serve.sh` to start TileStache in Gunicorn at [http://localhost:8000/](http://localhost:8000/).
+* Load [a sample tile on localhost](http://localhost:8000/rivers/13/1316/3169.json)
+to verify GeoJSON tiles are being served.
 * Run `serverTest.py` to do a quick test on the server.
 * Load `rivers-leaflet.html` or `rivers-polymaps.html` to view the map.
 
@@ -103,7 +104,8 @@ optimizes sending only visible geometry. Scaling tiles enables data to be
 simplified and down-sampled to match pixel visibility.
 
 Vector tiles are ultimately quite simple. Consider [this tile near near
-Oakland](http://somebits.com:8000/mergedRivers/13/1316/3169.json).
+Oakland](http://somebits.com:8000/rivers/13/1316/3169.json)
+(cached copy in [sample-13-1316-3169.json.txt]()).
 The [URL naming system](http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/)
 is exactly like Google's convention for raster map tiles:
 this tile is at z=13, x=1316, y=3169.
@@ -205,7 +207,8 @@ merging each river into a single LineString or MultiLineString results in
 vector tiles roughly one tenth the size and time to process.
 
 * `serve.sh` is a simple shell script to invoke Gunicorn and the TileStache
-webapp. In a real production deployment this should be replaced with a server
+webapp and serve it at [http://localhost:8000/](http://localhost:8000/).
+In a real production deployment this should be replaced with a server
 management framework. (It's also possible to serve TileStache via CGI, but
 it's terribly slow.)
 
@@ -227,7 +230,11 @@ is another simple test client for timing a few particularly slow
 tiles for the larger US data set.
 
 * `rivers-leaflet.html` and `rivers-polymaps.html` are two alternate
-Javascript map renderers. [Leaflet](http://leafletjs.com/) is an actively
+Javascript map renderers. They load vector tiles from URLs like
+`http://localhost:8000/rivers/{z}/{x}/{y}.json` and render them. Each also
+loads a couple of other map layers for context: a
+[shaded relief map from ESRI](http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2)
+and vector outlines of US states. [Leaflet](http://leafletjs.com/) is an actively
 maintained excellent Javascript map library; vector tile support is provided
 by Glen Robertson's [leaflet-tilelayer-geojson
 plugin](https://github.com/glenrobertson/leaflet-tilelayer-geojson).
