@@ -11,6 +11,8 @@ bind='127.0.0.1:8000'
 # Number of worker processes: 2-4x number of CPU cores is recommended
 workers=4
 
+timeout=300
+
 # Worker class. The default "sync" is fine with nginx as a proxy
 # gevent is a nice alternative if you want to serve the public from Gunicorn
 # worker_class='gevent'
