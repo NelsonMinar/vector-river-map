@@ -9,6 +9,7 @@ import psycopg2
 import time
 
 conn = psycopg2.connect("dbname=rivers host=localhost")
+conn.autocommit = True      # required for Postgres bug workaround below
 cur = conn.cursor()
 
 start = time.time()
@@ -22,45 +23,61 @@ cur.execute("""drop table if exists merged_rivers;""")
 cur.execute("""
 create table merged_rivers (
     gnis_id integer,
-    name varchar(65),
+    name text,
+    huc8 text,
     strahler smallint,
     geometry geometry);
 """)
 log("Table created")
 
-# Figure out how many different gnis_ids we're dealing with
-cur.execute("select count(distinct(gnis_id)) from rivers;")
+# Figure out how many different HUC8s we're dealing with
+cur.execute("select count(distinct(huc8)) from rivers;")
 count = cur.fetchone()[0]
+log("Processing {} unique HUC8s".format(count))
 
 # Need a separate cursor for inserts
 insertCursor = conn.cursor()
 
-# Iterate through each unique gnis_id and create rows in
-# our new database that are merged copies of that record
-# In theory this could all be done with one grand
+# Iterate through each unique HUC8. For each one, create
+# one row in merged_rivers for each unique (gnis_id, strahler)
+# pair. gnis_id is often null, so sometimes we'll be throwing
+# together unrelated rivers, but at least they're nearby.
+ # In theory this could all be done with one grand
 #   create table from select...
 # but in practice PostGIS didn't seem to do well with that.
-cur.execute("select distinct(gnis_id) from rivers;")
-for (gnisId,) in cur:
-    insertCursor.execute("""
-        insert into merged_rivers(gnis_id, name, strahler, geometry)
-        select
-            MAX(gnis_id) as gnis_id,
-            MAX(name) as name,
-            MAX(strahler) as strahler,
-            ST_LineMerge(ST_Union(geometry)) as geometry
-        from rivers
-        where gnis_id = %s
-        group by (gnis_id,strahler)""", (gnisId,))
+
+cur.execute("select distinct(huc8) from rivers;")
+for (huc8,) in cur:
+    # Willing to try each insert twice; working around a bug in Postgres
+    tries = 2
+    success = False
+    while tries > 0 and not success:
+        tries -= 1
+        try:
+            insertCursor.execute("""
+                insert into merged_rivers(gnis_id, name, strahler, huc8, geometry)
+                select
+                    MAX(gnis_id) as gnis_id,
+                    MAX(name) as name,
+                    MAX(strahler),
+                    MAX(huc8) as huc8,
+                    ST_LineMerge(ST_Union(geometry)) as geometry
+                from rivers
+                where huc8 = %s
+                group by (gnis_id,strahler)""", (huc8,))
+            success = True
+        except psycopg2.InternalError as e:
+            # Work around Postgres bug #8167 on MacOS. Details at
+            # https://gist.github.com/NelsonMinar/5588719
+            if str(e).strip().endswith("Invalid argument"):
+                log("Transient error, trying insert again. Tries left: {}".format(tries))
+            else:
+                raise e;
+
     # Partial status report
     count -= 1
-    if (count % 1000 == 0):
-        log("{} to go {} rows added for gnis_id {}".format(count, insertCursor.rowcount, gnisId))
-
-# Merging via gnis_is means we discard all rivers where gnis_id is null.
-# That's a bug; it's a lot of real rivers. So secondarily we
-# We can simply copy them in, but it's a lot of bloat. Would be nice to merge.
-# insert into rivers3(gnis_id, name, strahler, geometry) select  gnis_id, name, strahler, geometry from rivers where gnis_id is null;
+    if (count % 100 == 0):
+        log("{:5} HUC8s to go {:5} rows added for huc8 {}".format(count, insertCursor.rowcount, huc8))
 
 # Commit the new table
 conn.commit()
@@ -72,7 +89,7 @@ insertCursor.execute("create index merged_rivers_strahler_idx ON merged_rivers(s
 conn.commit()
 
 # Can't vacuum in a transaction
-conn.set_isolation_level(0)
+conn.autocommit = True
 insertCursor.execute("vacuum analyze merged_rivers;")
 
 log("All done!")
