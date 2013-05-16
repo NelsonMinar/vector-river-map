@@ -77,13 +77,14 @@ var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, { },
     { style: riverStyle,
       onEachFeature: function (feature, layer) {
           if (feature.properties) {
+              var name = feature.properties.n ? feature.properties.n : "no name";
+              var huc8 = feature.properties.h
               var popupString = [];
               popupString.push('<div class="popup">');
-              popupString.push('<b>', feature.properties.n, '</b><br>');
+              popupString.push('<b>', name, '</b><br>');
               popupString.push('HUC8: ');
               popupString.push('<a target="_blank" href="http://water.usgs.gov/lookup/getwatershed?',
-                               feature.properties.h,
-                               '">', feature.properties.h, '</a><br>');
+                               huc8, '">', huc8, '</a><br>');
               popupString.push('</div>');
               layer.bindPopup(popupString.join(''));
           }
