@@ -314,7 +314,9 @@ for smaller bandwidth.
 
 * Convert to TopoJSON for smaller encoding. Even without shared topology
 [TopoJSON](https://github.com/mbostock/topojson)
-encoding can be significantly smaller than equivalent GeoJSON.
+encoding can be significantly smaller than equivalent GeoJSON. See
+[Mike Bostock's experiments](https://github.com/mbostock/us-rivers)
+converting the entire river network to one giant TopoJSON file.
 
 * Measure and improve client render time. The D3 version of the client shows that
 rendering can happen very fast. Unfortunately Leaflet is pretty slow and
