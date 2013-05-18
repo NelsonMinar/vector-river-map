@@ -56,43 +56,45 @@ Light use only please; the server is not provisioned for real traffic.
 ## Quick start
 
 * Install <a href="#server-prerequisites">required software</a>.
-* Run `downloadNhd.sh` to get data.
-* Run `importNhd.sh` to bring data into PostGIS.
-* Run `serve.sh` to start TileStache in Gunicorn at [http://localhost:8000/](http://localhost:8000/).
+* Run `dataprep/downloadNhd.sh` to download data to a directory named "NHD".
+* Run `dataprep/importNhd.sh` to bring data NHD into a PostGIS database named "rivers".
+* Run `serve.sh` from inside the `server` directory
+to start TileStache in Gunicorn at [http://localhost:8000/](http://localhost:8000/).
 * Load [a sample tile on localhost](http://localhost:8000/rivers/13/1316/3169.json)
 to verify GeoJSON tiles are being served.
-* Run `serverTest.py` to do a quick test on the server.
-* Load `rivers-leaflet.html` or `rivers-polymaps.html` to view the map.
+* Run `clients/serverTest.py` to do a quick test on the server.
+* Load `clients/rivers-leaflet.html` or `clients/rivers-polymaps.html` to view the map.
 
 ## About vector tiles
 
 Vector tiles are an exciting, underutilized idea to make flexible and
-efficient web apps. Google Maps revolutioned online cartography by
-popularizing the use of [map tiles](http://www.maptiler.org/google-maps-
+efficient web maps. Google Maps revolutioned online cartography by
+popularizing [map tiles](http://www.maptiler.org/google-maps-
 coordinates-tile-bounds-projection/) to serve "slippy maps" with excellent
-quality and interactivity. Most slippy maps are raster maps, essentially a
-mosaïc of PNG or JPG images. But a lot of geographic data is
+quality and interactivity. Most slippy maps are raster maps, a mosaïc
+of PNG or JPG images. But a lot of geographic data is
 intrinsically vector oriented, lines and polygons. Pre-rendering geodata into raster
 image tiles is a common approach. But serving data as vectors
 that are then rendered in the user's browser can result in maps that are faster,
 smaller, and more flexible.
 
 Vector tiles are starting to catch on in proprietary applications; for
-instance most mobile maps are now rendered with vector data for a more
-efficient, more beautiful rendering. Vector
-mapping in the open source world is still a bit obscure. There are several
+instance most mobile maps are now rendered with vector data. Vector
+mapping in the open source world is still in the early stages. There are several
 open source vector renderers: the
 [Polymaps](http://polymaps.org/) Javascript library was an early pioneer,
 [MapsForge](https://code.google.com/p/mapsforge/) is a nice open source
 vector renderer for Android, and
 [MapBox 2](http://mapbox.com/blog/vector-tiles/) is based on
-a vector tile stack. Serving vector tiles has been less common, but
-is starting to become easier. This tutorial relies on [TileStache's VecTiles
+a vector tile stack. Serving vector tiles has only recently become easy.
+This tutorial relies on [TileStache's VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html) to
 serve our own prepared geodata.
 [OpenStreetMap is also experimenting](http://wiki.openstreetmap.org/wiki/Vector_tiles)
-with serving vector tiles of its data and you can see various experimental
-OSM vector clients like [Ziggy Jonsson's](http://bl.ocks.org/ZJONSSON/5529395)
+with serving vector tiles of its data.
+See [API documentation](http://www.openstreetmap.us/~migurski/vector-datasource/)
+and experimental OSM vector clients like
+[Ziggy Jonsson's](http://bl.ocks.org/ZJONSSON/5529395)
 and [Mike Bostock's](http://bl.ocks.org/mbostock/5593150).
 
 Tiling isn't necessary for all vector data. For example, the demonstration map
@@ -119,7 +121,7 @@ Each feature contains a geometry, a name, a
 and a [Strahler number](http://en.wikipedia.org/wiki/Strahler_Stream_Order)
 characterizing the river's significance.
 
-The tricky thing about vector
+One tricky thing about vector
 tiles is what to do about features that cross tiles. In this tutorial we clip
 the geometry to the tile boundary and rely on the overlapping lines being
 drawn to make a seamless map. It's also possible to not clip, which results in
@@ -170,7 +172,7 @@ This project consists of several short scripts and configuration files to
 glue together the software components. There is precious little programming
 logic here, most of it is integration.
 
-* `downloadNhd.sh` downloads data from [NHDPlus](http://www.horizon-
+* `dataprep/downloadNhd.sh` downloads data from [NHDPlus](http://www.horizon-
 systems.com/nhdplus/), a nice repository of cleaned up National Hydrographic
 Data distributed as ESRI shapefiles. This shell script takes care of
 downloading the files and then extracting the specific data files we're
@@ -178,7 +180,7 @@ interested in. NHDPlus is a fantastic resource if you're interested in mapping
 water in the United States. Note by default the script only downloads data
 for California; edit the script if you want the entire US.
 
-* `importNhd.sh` imports the NHDPlus data into PostGIS and
+* `dataprep/importNhd.sh` imports the NHDPlus data into PostGIS and
 prepares it for serving. This script borrows ideas from [Seth Fitzsimmons'
 NHD importer](https://gist.github.com/mojodna/b1f169b33db907f2b8dd). Note that
 detailed output is logged to a file named `/tmp/nhd.log.*`, see the first line
@@ -189,34 +191,35 @@ of script output for details. The steps this script takes are:<ol><li>Create a d
 <li>Run `mergeRivers.py` to create a table named `merged_rivers`
 </ol>
 
-* `processNhd.sql` prepares the imported data to a format more tailored
+* `dataprep/processNhd.sql` prepares the imported data to a format more tailored
 to our needs. It makes a new table named `rivers` which joins
 the geometry from NHDFlowline with metadata such as river name,
 [reach code](http://nhd.usgs.gov/nhd_faq.html#q119), and
 [Strahler number](http://en.wikipedia.org/wiki/Strahler_number) from
 PlusFlowlineVAA. It has about 2.7 million rows for the whole US.
 
-* `mergeRivers.py` optimizes the data by merging geometry. NHD data
+* `dataprep/mergeRivers.py` optimizes the data by merging geometry. NHD data
 has many tiny little rows for a single river. For efficiency
 we merge geometries based on river ID and the
 HUC8 portion of the reach code. The resulting `merged_rivers` table
 has about 330,000 rows.
-This step is not strictly necessary &mdash; TileStache can serve the geometry
+This step is complex and not strictly necessary &mdash;
+TileStache can serve the geometry
 in the `rivers` table directly. But the resulting GeoJSON is large and slow,
 merging each river into a single LineString or MultiLineString results in
 vector tiles roughly one tenth the size and time to process.
 
-* `serve.sh` is a simple shell script to invoke Gunicorn and the TileStache
+* `server/serve.sh` is a simple shell script to invoke Gunicorn and the TileStache
 webapp and serve it at [http://localhost:8000/](http://localhost:8000/).
 In a real production deployment this should be replaced with a server
 management framework. (It's also possible to serve TileStache via CGI, but
 it's terribly slow.)
 
-* `gunicorn.cfg.py` is the Gunicorn server configuration. There's very little
+* `server/gunicorn.cfg.py` is the Gunicorn server configuration. There's very little
 here in this example, Gunicorn has [many configuration
 options](http://docs.gunicorn.org/en/latest/configure.html).
 
-* `tilestache.cfg` sets up TileStache to serve a single layer named `rivers`
+* `server/tilestache.cfg` sets up TileStache to serve a single layer named `rivers`
 from the `merged_rivers` table, backed by a cache in `/tmp/stache`.
 It uses the [VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html), the
@@ -224,23 +227,29 @@ magic in TileStache that takes care of doing PostGIS queries and preparing
 nicely cropped GeoJSON tiles. At this layer we start making significant
 cartographic decisions.
 
-* `serverTest.py` is a simple Python client test that inspects a few
-vector tiles for basic correctness and reports load times. `slowTiles.py`
+* `clients/serverTest.py` is a simple Python client test that inspects a few
+vector tiles for basic correctness and reports load times.
+`clients/slowTiles.py`
 is another simple test client for timing a few particularly slow
 tiles for the larger US data set.
 
-* `rivers-leaflet.html` and `rivers-polymaps.html` are two alternate
-Javascript map renderers. They load vector tiles from URLs like
-`http://localhost:8000/rivers/{z}/{x}/{y}.json` and render them. Each also
-loads a couple of other map layers for context: a
+* `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`, and
+`clients/rivers-d3.html` are three different implementations of
+Javascript map renderers. They each load vector tiles from URLs like
+`http://localhost:8000/rivers/{z}/{x}/{y}.json` and render them as SVG.
+The Leaflet and Polymaps versions also load a couple of other map layers for context: a
 [shaded relief map from ESRI](http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2)
-and vector outlines of US states. [Leaflet](http://leafletjs.com/) is an actively
+and vector outlines of US states.<br><br>The differences between the three are which Javascript libraries are used
+to implement the map. [Leaflet](http://leafletjs.com/) is an actively
 maintained excellent Javascript map library; vector tile support is provided
 by Glen Robertson's [leaflet-tilelayer-geojson
 plugin](https://github.com/glenrobertson/leaflet-tilelayer-geojson).
 [Polymaps](http://polymaps.org/) is an older Javascript map library that is no
 longer actively maintained. Polymaps pioneered the vector tile idea and
-renders vector maps very efficiently.
+renders vector maps very efficiently. [D3.js](http://d3js.org/) is a
+visualization toolkit with strong geographic data capabilities. The D3
+implementation is more of a demo than a complete map and is heavily
+borrowed from [an example by Mike Bostock](http://bl.ocks.org/mbostock/5593150).
 
 ## Cartographic decisions
 
