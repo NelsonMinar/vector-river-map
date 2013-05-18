@@ -68,11 +68,11 @@ done
 
 ### Run a SQL script to clean up the database and building indices
 echo "Building rivers table from downloaded files"
-psql -d $DB -f processNhd.sql >> $LOG 2>&1
+psql -d $DB -f dataprep/processNhd.sql >> $LOG 2>&1
 
 ### Run a Python script to merge rivers for serving
 echo "Creating the merged_rivers table from rivers"
-python -u mergeRivers.py
+python -u dataprep/mergeRivers.py
 
 ### And print some stats
 end=`date +%s`
