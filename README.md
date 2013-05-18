@@ -196,7 +196,9 @@ to our needs. It makes a new table named `rivers` which joins
 the geometry from NHDFlowline with metadata such as river name,
 [reach code](http://nhd.usgs.gov/nhd_faq.html#q119), and
 [Strahler number](http://en.wikipedia.org/wiki/Strahler_number) from
-PlusFlowlineVAA. It has about 2.7 million rows for the whole US.
+PlusFlowlineVAA. It has about 2.7 million rows for the whole US. (NHDFlowline
+has nearly 3 million rows; flowlines which have no comid in
+PlusFlowlineVAA are discarded, a potential source of bias.)
 
 * `dataprep/mergeRivers.py` optimizes the data by merging geometry. NHD data
 has many tiny little rows for a single river. For efficiency
@@ -329,6 +331,10 @@ on mobile browsers. WebGL is a very interesting option; see
 [Migurski's experiments](http://mike.teczno.com/notes/gl-solar-webgl-openstreetmap.html)
 with WebGL and vector maps.
 
+* Extend data coverage to other countries.
+[Natural Earth](http://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/)
+is a good place to start. It also has links to other sources like
+[Europe's CCM2](http://ccm.jrc.ec.europa.eu/php/index.php?action=view&id=23).
 
 ## Conclusion
 
