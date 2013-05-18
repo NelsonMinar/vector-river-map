@@ -316,6 +316,18 @@ for smaller bandwidth.
 [TopoJSON](https://github.com/mbostock/topojson)
 encoding can be significantly smaller than equivalent GeoJSON.
 
+* Measure and improve client render time. The D3 version of the client shows that
+rendering can happen very fast. Unfortunately Leaflet is pretty slow and
+Polymaps somewhere in the middle. Some quality time with Chrome
+Developer Tools could help figure out where to optimize.
+
+* WebGL or Canvas clients. All three Javascript clients in this tutorial render
+via SVG. That's a natural choice for vector data but it can be slow, particularly
+on mobile browsers. WebGL is a very interesting option; see
+[Migurski's experiments](http://mike.teczno.com/notes/gl-solar-webgl-openstreetmap.html)
+with WebGL and vector maps.
+
+
 ## Conclusion
 
 The [vector river map](https://github.com/NelsonMinar/vector-river-map)
