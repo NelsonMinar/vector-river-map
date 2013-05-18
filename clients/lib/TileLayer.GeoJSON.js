@@ -132,8 +132,8 @@ L.TileLayer.GeoJSON = L.TileLayer.Ajax.extend({
             end = Math.max(end, o.end);
         }
         console.log(
-            Math.round(end-start) + "ms " +
             Math.round(size/1024) + "kB " +
+            Math.round(end-start) + "ms " +
             statistics.tiles.length + " URLs, " +
             Math.round(time) + "ms aggregate",
             statistics);
