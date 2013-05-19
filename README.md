@@ -5,12 +5,12 @@ Map of American Rivers
 
 By [Nelson Minar](http://www.somebits.com/) <tt>&lt;[nelson@monkey.org](mailto:nelson@monkey.org)&gt;</tt><br>
 May 2013<br>
-See the [live map](http://www.somebits.com/~nelson/tmp/rivers/)
+See the [live map](http://www.somebits.com/rivers/rivers-leaflet.html)
 and [the source code](https://github.com/NelsonMinar/vector-river-map).
 
 <div style="background-color: #ffd"><b>Prerelease version</b>, not yet complete.</div>
 
-<a href="http://www.somebits.com/~nelson/tmp/rivers/rivers-leaflet.html#9/38.4385/-121.1270"><img src="https://raw.github.com/NelsonMinar/vector-river-map/master/sample.jpg" alt="sample map"></a>
+<a href="http://www.somebits.com/rivers/rivers-leaflet.html#9/38.4385/-121.1270"><img src="https://raw.github.com/NelsonMinar/vector-river-map/master/sample.jpg" alt="sample map"></a>
 
 Many thanks to
 [Mike Bostock](http://bost.ocks.org/mike/),
@@ -27,14 +27,16 @@ vector based web map of American rivers. This demonstration map is neither
 particularly beautiful nor complex, but it is a complete example of how
 to build a web map using tiled vector data into a web map. The source code is
 open source you are encouraged to read and tinker with.
+There are three parts to the project: data preparation, HTTP serving of
+vector tiles, and clients that render maps.
 The components integrated in this project are:
 
 1. [NHDPlus](http://www.horizon-systems.com/nhdplus/), the source data for river flowlines.
 2. [PostGIS](http://postgis.refractions.net/), a geographic database.
 3. [TileStache](http://tilestache.org/), a vector tile [GeoJSON](http://www.geojson.org/) server.
 4. [Gunicorn](http://gunicorn.org/), a Python web server container.
-5. [Leaflet](http://leafletjs.com/) and [Polymaps](http://polymaps.org/), two Javascript libraries
-for rendering maps.
+5. [Leaflet](http://leafletjs.com/), [Polymaps](http://polymaps.org/), and
+[D3.js](http://d3js.org/), three Javascript libraries for rendering maps.
 
 It's a lot of pieces, but each one is pretty simple by itself. Combined
 together they form a powerful open source mapping stack for
@@ -50,7 +52,7 @@ detailed development notes on
 
 For client authors, the vector tiles are available as a service with
 the URL pattern
-`http://somebits.com:8000/rivers/{z}/{x}/{y}.json`.
+`http://somebits.com:8001/rivers/{z}/{x}/{y}.json`.
 Light use only please; the server is not provisioned for real traffic.
 
 ## Quick start
@@ -106,7 +108,7 @@ optimizes sending only visible geometry. Scaling tiles enables data to be
 simplified and down-sampled to match pixel visibility.
 
 Vector tiles are ultimately quite simple. Consider [this tile near near
-Oakland](http://somebits.com:8000/rivers/13/1316/3169.json)
+Oakland](http://somebits.com:8001/rivers/13/1316/3169.json)
 (cached copy in [sample-13-1316-3169.json.txt]()).
 The [URL naming system](http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/)
 is exactly like Google's convention for raster map tiles:
