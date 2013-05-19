@@ -67,7 +67,7 @@ stateLayer.addTo(map);
 // Style the river lines; width depends on its Strahler number
 function riverStyle(feature) {
     return { "color": "#29439c",
-             "weight": feature.properties.strahler / 2.0,
+             "weight": feature.properties.strahler * map.getZoom()/13,
              "opacity": 1.0, };
 }
 

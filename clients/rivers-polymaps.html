@@ -73,7 +73,7 @@ map.add(po.geoJson()
     .on("load", po.stylist()
       .attr("stroke", "#29439c")
       .attr("opacity", 1)
-      .attr("stroke-width", function(d) { return (d.properties.strahler / 2.0) + "px"; })));
+      .attr("stroke-width", function(d) { return d.properties.strahler * map.zoom()/13+ "px"; })));
 
 </script>
 </body></html>
