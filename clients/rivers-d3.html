@@ -4,9 +4,11 @@
 <meta charset="utf-8">
 <style>
 
-body { margin: 0; font-family: Helvetica, Arial, sans-serif; }
+body { margin: 0; overflow: hidden;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-size: 11px; line-height: 16px;  }
 .map { position: relative; overflow: hidden; }
-.info { position: absolute; bottom: 10px; left: 10px; }
+.info { position: absolute; bottom: 0px; right: 20px; background-color: rgba(255, 255, 255, 0.7) }
 .layer { position: absolute; }
 .tile { position: absolute; width: 256px; height: 256px; }
 .tile path {
@@ -21,6 +23,17 @@ body { margin: 0; font-family: Helvetica, Arial, sans-serif; }
       style="position:absolute;top:0;right:0;border:0;z-index:3"
       width="149" height="149" src="forkme.png" alt="Fork me on GitHub"
       /></a>
+
+<div style="font-size: 11px; line-height: 16px; position: absolute;
+background-color: rgba(255, 255, 255, 0.7); padding: 0px 5px 0px 5px;
+bottom: 0px; left: 0px; z-index: 8">
+  Vector tile tutorial
+  (<a href="https://github.com/NelsonMinar/vector-river-map">GitHub</a>).
+  By <A href="http://www.somebits.com/">Nelson Minar</a>.
+  Views: <a href="rivers-leaflet.html">Leaflet</a> &bull;
+         <a href="rivers-polymaps.html">Polymaps</a> &bull;
+         <a href="rivers-d3.html">D3.js</a></div>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/d3.geo.tile.v0.min.js"></script>
 <script>
