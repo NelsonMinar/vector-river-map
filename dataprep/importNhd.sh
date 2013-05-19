@@ -37,7 +37,7 @@ psql -q -d $DB -c 'create extension postgis_topology'
 
 ### Import NHDFlowline tables
 # Find the data files
-flowlines="$DATADIR/NHDPlus??/NHDPlus*/NHDSnapshot/Hydrography/NHDFlowline.shp"
+flowlines="$DATADIR/NHDPlus??/NHDPlus*/NHDSnapshot/Hydrography/{NHDF,nhdf}lowline.shp"
 
 # Create the schema based on the first file
 set -- $flowlines
