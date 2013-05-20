@@ -5,12 +5,10 @@ Map of American Rivers
 
 By [Nelson Minar](http://www.somebits.com/) <tt>&lt;[nelson@monkey.org](mailto:nelson@monkey.org)&gt;</tt><br>
 May 2013<br>
-See the [live map](http://www.somebits.com/rivers/rivers-leaflet.html)
+See the [live map](http://www.somebits.com/rivers/rivers-polymaps.html)
 and [the source code](https://github.com/NelsonMinar/vector-river-map).
 
-<div style="background-color: #ffd"><b>Prerelease version</b>, not yet complete.</div>
-
-<a href="http://www.somebits.com/rivers/rivers-leaflet.html#9/38.4385/-121.1270"><img src="https://raw.github.com/NelsonMinar/vector-river-map/master/sample.jpg" alt="sample map"></a>
+<a href="http://www.somebits.com/rivers/rivers-polymaps.html#9/38.4385/-121.1270"><img src="https://raw.github.com/NelsonMinar/vector-river-map/master/sample.jpg" alt="sample map"></a>
 
 Many thanks to
 [Mike Bostock](http://bost.ocks.org/mike/),
@@ -41,10 +39,10 @@ The components integrated in this project are:
 It's a lot of pieces, but each one is pretty simple by itself. Combined
 together they form a powerful open source mapping stack for
 serving vector data to web browsers. You're welcome to [see the map running
-live](http://www.somebits.com/~nelson/tmp/rivers/) on my server, but the real
+live](http://www.somebits.com/rivers/rivers-polymaps.html) on my server, but the real
 point of this project is to show developers all the pieces necessary to build
 their own map using vector tiles. Read on for details of how the map is
-constructed, and be sure to
+constructed and be sure to
 [check out the source code](https://github.com/NelsonMinar/vector-river-map);
 lots of comments and a focus on readability. There are also some very
 detailed development notes on
@@ -65,55 +63,59 @@ to start TileStache in Gunicorn at [http://localhost:8000/](http://localhost:800
 * Load [a sample tile on localhost](http://localhost:8000/rivers/13/1316/3169.json)
 to verify GeoJSON tiles are being served.
 * Run `clients/serverTest.py` to do a quick test on the server.
-* Load `clients/rivers-leaflet.html` or `clients/rivers-polymaps.html` to view the map.
+* Load `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`, or
+`clients/rivers-d3.html` to view the map.
 
 ## About vector tiles
 
-Vector tiles are an exciting, underutilized idea to make flexible and
-efficient web maps. Google Maps revolutioned online cartography by
-popularizing [map tiles](http://www.maptiler.org/google-maps-
-coordinates-tile-bounds-projection/) to serve "slippy maps" with excellent
-quality and interactivity. Most slippy maps are raster maps, a mosaïc
-of PNG or JPG images. But a lot of geographic data is
-intrinsically vector oriented, lines and polygons. Pre-rendering geodata into raster
-image tiles is a common approach. But serving data as vectors
-that are then rendered in the user's browser can result in maps that are faster,
-smaller, and more flexible.
+Vector tiles are an exciting, underutilized idea to make
+efficient maps. Google Maps revolutioned online cartography with "slippy maps",
+raster maps that are a mosaïcof PNG or JPG images. But a lot of geographic data is
+intrinsically vector oriented, lines and polygons. Today many map servers
+render vector data into raster images that are then served to clients.
+But serving the vector data directly to the user's browser for rendering
+on the client can make maps that are  more flexible and more efficient.
+Mobile apps and proprietary services like Google Maps are starting to switch
+to vector maps.
 
-Vector tiles are starting to catch on in proprietary applications; for
-instance most mobile maps are now rendered with vector data. Vector
-mapping in the open source world is still in the early stages. There are several
-open source vector renderers: the
-[Polymaps](http://polymaps.org/) Javascript library was an early pioneer,
-[MapsForge](https://code.google.com/p/mapsforge/) is a nice open source
-vector renderer for Android, and
+Open source vector mapping is still in the early stages. There are several
+open source vector clients:
+[Polymaps](http://polymaps.org/) was an early pioneer
+for browser maps,
+[MapsForge](https://code.google.com/p/mapsforge/) and
+[OpenScienceMap](http://www.opensciencemap.org/?page_id=2) are
+renderers for Android, and
 [MapBox 2](http://mapbox.com/blog/vector-tiles/) is based on
-a vector tile stack. Serving vector tiles has only recently become easy.
+[a vector tile stack](https://github.com/mapbox/mapnik-vector-tile).
+There are few open data vector services although recently
+[OpenStreetMap has experimented](http://wiki.openstreetmap.org/wiki/Vector_tiles)
+with serving [vector tiles](http://www.openstreetmap.us/~migurski/vector-datasource/).
+(See experimental clients like
+[Ziggy Jonsson's](http://bl.ocks.org/ZJONSSON/5529395),
+[Bobby Sudekum's](http://bl.ocks.org/rsudekum/5598998),
+and [Mike Bostock's](http://bl.ocks.org/mbostock/5593150).)
+And currently there are only a couple of open source vector tile servers.
 This tutorial relies on [TileStache's VecTiles
 provider](http://tilestache.org/doc/TileStache.Goodies.VecTiles.html) to
-serve our own prepared geodata.
-[OpenStreetMap is also experimenting](http://wiki.openstreetmap.org/wiki/Vector_tiles)
-with serving vector tiles of its data.
-See [API documentation](http://www.openstreetmap.us/~migurski/vector-datasource/)
-and experimental OSM vector clients like
-[Ziggy Jonsson's](http://bl.ocks.org/ZJONSSON/5529395)
-and [Mike Bostock's](http://bl.ocks.org/mbostock/5593150).
+serve our geodata.
+[Ceramic](https://github.com/mdaines/ceramic) is an alternative.
 
-Tiling isn't necessary for all vector data. For example, the demonstration map
-contains the US state boundaries as a single 88k GeoJSON file. If the full
+Tiling isn't necessary for all vector data; if the full
 dataset is small it is reasonable to serve an entire vector geometry as a
-single file and let the client renderer take care of clipping. That works fine
-for 100kB of data but is impractical with 10+MB of geometry. Cropping to tiles
-optimizes sending only visible geometry. Scaling tiles enables data to be
-simplified and down-sampled to match pixel visibility.
+single file. For example,
+this tutorial maps incldues an 88kb file of US state outlines. But with
+10+MB of geodata it's important to only serve visible geometry, not the
+entire dataset. In addition scaling tiles to the current zoom level
+allows simplification and down-sampling to pixel visibility. But tiling
+requires a lot of data preparation and server setup, hence this tutorial.
 
 Vector tiles are ultimately quite simple. Consider [this tile near near
 Oakland](http://somebits.com:8001/rivers/13/1316/3169.json)
-(cached copy in [sample-13-1316-3169.json.txt]()).
+(cached copy in [sample-13-1316-3169.json.txt](https://github.com/NelsonMinar/vector-river-map/blob/master/sample-13-1316-3169.json.txt)).
 The [URL naming system](http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/)
-is exactly like Google's convention for raster map tiles:
+is Google's convention for raster map tiles:
 this tile is at z=13, x=1316, y=3169.
-Only instead of serving a PNG image the URL results in a
+Only instead of serving a PNG image the URL serves a
 [GeoJSON file](http://www.geojson.org/) describing the geometry inside the
 tile's bounding box. This example tile has 3 features in it; one for
 San Lorenzo Creek, one for Sulphur Creek, and one for two other unnamed
@@ -200,7 +202,7 @@ the geometry from NHDFlowline with metadata such as river name,
 [Strahler number](http://en.wikipedia.org/wiki/Strahler_number) from
 PlusFlowlineVAA. It has about 2.7 million rows for the whole US. (NHDFlowline
 has nearly 3 million rows; flowlines which have no comid in
-PlusFlowlineVAA are discarded, a potential source of bias.)
+PlusFlowlineVAA are discarded.)
 
 * `dataprep/mergeRivers.py` optimizes the data by merging geometry. NHD data
 has many tiny little rows for a single river. For efficiency
@@ -209,7 +211,8 @@ HUC8 portion of the reach code. The resulting `merged_rivers` table
 has about 330,000 rows.
 This step is complex and not strictly necessary &mdash;
 TileStache can serve the geometry
-in the `rivers` table directly. But the resulting GeoJSON is large and slow,
+in the `rivers` table directly. But the resulting GeoJSON is large and slow
+to render;
 merging each river into a single LineString or MultiLineString results in
 vector tiles roughly one tenth the size and time to process.
 
@@ -277,9 +280,9 @@ which are relatively big, those with a [Strahler
 number](http://en.wikipedia.org/wiki/Strahler_number) of 6 or higher. At finer
 grained zoom levels we return more and smaller rivers. This per-zoom filtering
 both limits the bandwidth used on large scale maps and prevents the display
-from being overcluttered. Rendering zillions of tiny streams
-can be [quite beautiful](http://nelsonslog.wordpress.com/2013/04/19
-/california-rivers/), but also resource intensive.
+from being overcluttered. Rendering zillions of tiny streams can be
+[quite beautiful](http://www.flickr.com/photos/nelsonminar/sets/72157633504361549/detail/),
+but also resource intensive.
 
 VecTiles also simplifies the
 geometry, serving only the precision needed at the zoom level. You can
@@ -296,10 +299,11 @@ The map provided here is a simple tutorial demonstration. To make
 this a better map, some possible directions:
 
 * More beautiful river rendering. The rivers here are drawn as simple blue
-lines with a static thickness based on the river's Strahler number, a
-topological measure of its distance from headwaters. It'd be better to vary
-thickness also based on the map's zoom level, or maybe change the color too,
-or bring in extra information on river size such as flow rate or average
+lines with a thickness based on the zoom level and the river's Strahler number,
+a topological measure of its distance from headwaters.
+The map could be made more beautiful by
+[varying the river color too](http://blog.dwtkns.com/2011/generic-stream-terms/),
+or bringing in extra information on river size such as flow rate or average
 channel width.
 
 * More thematic data. The ESRI relief tiles are a nice base map because they show the
@@ -309,7 +313,9 @@ or cities and major roads?
 
 * Use a better HTTP server. Gunicorn is designed to run behind a proxy like
 Nginx or Apache. Not only does a proxy handle slow clients better, it can
-serve appropriate caching headers and gzip the JSON output.
+serve appropriate caching headers and gzip the JSON output. The file
+`server/nginx-rivers.conf` is how the tiles are served on the
+[live server](http://www.somebits.com/rivers/rivers-polymaps.html#9/38.4385/-121.1270).
 
 * More efficient vector tiles. The code here downloads a new set of tiles for
 every zoom level. But that's needlessly redundant; it's feasible to only
