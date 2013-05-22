@@ -276,7 +276,7 @@ Strahler number, combination with other vector data sources, etc.
 The map clients presented here all use the Google Mercator projection, as is
 standard for web maps. But because the river data is vector oriented it's
 possible to project it in other ways. For example, see
-[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/viewport-invert/).
+[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/us-rivers/).
 
 Some cartographic decisions are made on the server side. The TileStache
 VecTiles configuration contains an array of queries that return results at
@@ -346,7 +346,7 @@ with WebGL and vector maps.
 
 * Alternate projections. The spherical mercator we use for web maps is a reasonable
 compromise, but other projections can be interesting. See
-[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/viewport-invert/)
+[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/us-rivers/)
 and [Mike Bostock's WebGL raster reprojection](http://bl.ocks.org/mbostock/5446416).
 
 * Extend data coverage to other countries.
