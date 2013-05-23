@@ -63,8 +63,8 @@ to start TileStache in Gunicorn at [http://localhost:8000/](http://localhost:800
 * Load [a sample tile on localhost](http://localhost:8000/rivers/13/1316/3169.json)
 to verify GeoJSON tiles are being served.
 * Run `clients/serverTest.py` to do a quick test on the server.
-* Load `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`, or
-`clients/rivers-d3.html` to view the map.
+* Load `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`,
+`clients/rivers-d3.html`, or `clients/rivers-d3leaflet.html` to view the map.
 
 ## About vector tiles
 
@@ -240,17 +240,21 @@ vector tiles for basic correctness and reports load times.
 is another simple test client for timing a few particularly slow
 tiles for the larger US data set.
 
-* `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`, and
-`clients/rivers-d3.html` are three different implementations of
+* `clients/rivers-leaflet.html`, `clients/rivers-polymaps.html`,
+`clients/rivers-d3.html`, and `clients/rivers-d3leaflet.html`
+are four different implementations of
 Javascript map renderers. They each load vector tiles from URLs like
 `http://localhost:8000/rivers/{z}/{x}/{y}.json` and render them as SVG.
-The Leaflet and Polymaps versions also load a couple of other map layers for context: a
+Most versions also load a couple of other map layers for context: a
 [shaded relief map from ESRI](http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2)
-and vector outlines of US states.<br><br>The differences between the three are which Javascript libraries are used
+and vector outlines of US states.<br><br>The differences between these
+clients are which Javascript libraries are used
 to implement the map. [Leaflet](http://leafletjs.com/) is an actively
-maintained excellent Javascript map library; vector tile support is provided
-by Glen Robertson's [leaflet-tilelayer-geojson
-plugin](https://github.com/glenrobertson/leaflet-tilelayer-geojson).
+maintained excellent Javascript map library; `rivers-leaflet` uses
+vector tile support from Glen Robertson's [leaflet-tilelayer-geojson
+plugin](https://github.com/glenrobertson/leaflet-tilelayer-geojson),
+whereas `rivers-d3leaflet` uses a Leaflet/D3 hybrid
+that is fast but not feature complete.
 [Polymaps](http://polymaps.org/) is an older Javascript map library that is no
 longer actively maintained. Polymaps pioneered the vector tile idea and
 renders vector maps very efficiently. [D3.js](http://d3js.org/) is a
@@ -334,9 +338,11 @@ encoding can be significantly smaller than equivalent GeoJSON. See
 converting the entire river network to one giant TopoJSON file.
 
 * Measure and improve client render time. The D3 version of the client shows that
-rendering can happen very fast. Unfortunately Leaflet is pretty slow and
-Polymaps somewhere in the middle. Some quality time with Chrome
-Developer Tools could help figure out where to optimize.
+rendering can happen very fast. Unfortunately Leaflet's GeoJSON rendering is pretty
+slow and Polymaps somewhere in the middle. Some quality time with Chrome
+Developer Tools could help figure out where to optimize Leaflet, or maybe the
+`lib/TileLayer.d3_geoJSON.js` library could be extended to support all the
+features of a Leaflet tile layer.
 
 * WebGL or Canvas clients. All three Javascript clients in this tutorial render
 via SVG. That's a natural choice for vector data but it can be slow, particularly
@@ -346,7 +352,8 @@ with WebGL and vector maps.
 
 * Alternate projections. The spherical mercator we use for web maps is a reasonable
 compromise, but other projections can be interesting. See
-[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/us-rivers/)
+[Jason Davies' Albers rivers map](http://www.jasondavies.com/maps/us-rivers/),
+[Jason's canvas raster reprojection](http://www.jasondavies.com/maps/raster/),
 and [Mike Bostock's WebGL raster reprojection](http://bl.ocks.org/mbostock/5446416).
 
 * Extend data coverage to other countries.
