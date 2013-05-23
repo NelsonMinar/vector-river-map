@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0"/>
+
+<title>Leaflet vector tile map of rivers</title>
+
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+<!--[if lte IE 8]>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.ie.css" />
+<![endif]-->
+<script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+<script src="lib/leaflet-hash.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="lib/TileLayer.d3_geoJSON.js"></script>
+<script type="text/javascript" src="us-states.js"></script>
+
+<style type="text/css">
+html, body { height: 100% }
+#map { min-height: 100%; }
+body {
+    margin: 0;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif; font-size: 12px;
+    overflow: hidden;
+    background-color: #f00;
+}
+.leaflet-popup-content-wrapper {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+path { stroke-linejoin; round; stroke-linecap: round; fill: none; }
+path.river { stroke: #29439c; }
+.leaflet-layer img { -webkit-filter: grayscale(100%); }
+</style>
+
+</head><body>
+
+<div id="map"></div>
+
+<a href="https://github.com/NelsonMinar/vector-river-map"><img
+      style="position:absolute;top:0;right:0;border:0;"
+      width="149" height="149" src="forkme.png" alt="Fork me on GitHub"
+      /></a>
+
+<div style="font-size: 11px; line-height: 16px; position: absolute;
+background-color: rgba(255, 255, 255, 0.7); padding: 0px 5px 0px 5px;
+bottom: 0px; left: 0px; z-index: 8">
+  Vector tile tutorial
+  (<a href="https://github.com/NelsonMinar/vector-river-map">GitHub</a>).
+  By <A href="http://www.somebits.com/">Nelson Minar</a>.
+  Views: <a href="rivers-leaflet.html">Leaflet</a> &bull;
+         <a href="rivers-polymaps.html">Polymaps</a> &bull;
+         <a href="rivers-d3.html">D3.js</a></div>
+
+<script type="text/javascript">
+
+// Construct map, center if no location provided
+var map = L.map('map', { maxZoom: 13 } );
+var hash = new L.Hash(map);
+if (!window.location.hash) {
+    map.setView([37.958, -120.976], 8);
+}
+
+// Make the base map; a raster tile relief map from ESRI
+var esriRelief = 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}'
+
+var basemap = L.tileLayer(esriRelief, {
+        attribution: '<a href="http://www.arcgis.com/home/item.html?id=9c5370d0b54f4de1b48a3792d7377ff2">ESRI shaded relief</a>, <a href="http://www.horizon-systems.com/NHDPlus/NHDPlusV2_home.php">NHDPlus v2</a>',
+        maxZoom: 13
+});
+basemap.addTo(map);
+
+// Add a single GeoJSON vector file for state boundaries
+// This was loaded statically as a script; could also be AJAX
+var stateLayer = new L.geoJson(usStates);
+stateLayer.setStyle({ "color": "#444",
+                      "weight": 1,
+                      "fill": false,
+                      "opacity": 1.0 });
+stateLayer.addTo(map);
+
+// Style the river lines; width depends on its Strahler number
+function riverStyle(feature) {
+    return "stroke-width: " + feature.properties.strahler * map.getZoom()/13 + "px;";
+}
+
+// Make the river overlay layer, vector tiles from our TileStache/Gunicorn server
+var geojsonURL = "http://localhost:8000/rivers/{z}/{x}/{y}.json";
+var riverLayer = new L.TileLayer.d3_geoJSON(geojsonURL, {
+  class: "river",
+  style: riverStyle,
+});
+map.addLayer(riverLayer);
+
+</script>
+</body></html>
