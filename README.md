@@ -356,7 +356,7 @@ compromise, but other projections can be interesting. See
 [Jason's canvas raster reprojection](http://www.jasondavies.com/maps/raster/),
 and [Mike Bostock's WebGL raster reprojection](http://bl.ocks.org/mbostock/5446416).
 
-* Extend data coverage to other countries.
+* Extend data coverage to Alaska, Hawai&#699;', and other countries.
 [Natural Earth](http://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/)
 is a good place to start. It also has links to other sources like
 [Europe's CCM2](http://ccm.jrc.ec.europa.eu/php/index.php?action=view&id=23).
