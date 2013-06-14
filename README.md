@@ -21,7 +21,8 @@ for feedback and help.
 ## Introduction
 
 This project contains everything you need from start to finish to make a
-vector based web map of American rivers. This demonstration map is neither
+vector based web map of American rivers in the contiguous 48 states.
+This demonstration map is neither
 particularly beautiful nor complex, but it is a complete example of how
 to build a web map using tiled vector data into a web map. The source code is
 open source you are encouraged to read and tinker with.
