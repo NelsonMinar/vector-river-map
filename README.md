@@ -142,8 +142,9 @@ On the Mac, most prerequisites are available via
 [Homebrew](http://mxcl.github.io/homebrew/); see also this
 [guide to open source geo on the Mac](https://github.com/nvkelso/geo-how-to/wiki/Installing-Open-Source-Geo-Software:-Mac-Edition).
 On Ubuntu most software is available via
-`apt-get`, although the more recent versions from the [UbuntuGIS
-PPA](https://wiki.ubuntu.com/UbuntuGIS) are recommended. Other Linux
+`apt-get`, although PostGIS 2 from the [UbuntuGIS
+PPA](https://wiki.ubuntu.com/UbuntuGIS) is necessary. See below for
+extra Ubuntu notes. Other Linux
 distributions can probably install the required software via their native
 package system. If the code is available on
 [PyPI](https://pypi.python.org/pypi) I prefer to install Python code with
@@ -156,10 +157,9 @@ or Ubuntu package versions.
 PostgreSQL 9.1 or later and PostGIS 2 are recommended for ease of installing the PostGIS extension.
 * [psycopg2](http://initd.org/psycopg/) for talking to Postgres from Python.
 * shp2pgsql, part of PostGIS, for importing ESRI shapefiles into PostGIS
-* [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Unfortunately the Ubuntu/precise
-version 0.5.5 does not have the `-s` flag needed for handling non-ASCII data. Install from
+* [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Unfortunately the Ubuntu versions prior to 0.6.2 do not have the `-s` flag needed for handling non-ASCII data. Install from
 [sources](http://sourceforge.net/projects/pgdbf/files/pgdbf/) or ensure you're
-getting version 0.6.* from somewhere.
+getting version 0.6.2 or later from somewhere.
 * [Gunicorn](http://gunicorn.org/) for a Python web app server.
 * [TileStache](http://tilestache.org/) for the Python web app that serves map tiles. TileStache has
 an undocumented dependency on [Shapely](https://pypi.python.org/pypi/Shapely)
@@ -167,9 +167,27 @@ that you can install via `pip`.
 * [requests](http://docs.python-requests.org/en/latest/) and
 [grequests](https://github.com/kennethreitz/grequests) for `serverTest.py`, a Python HTTP client test.
 * [gdal](http://www.gdal.org/) is the low level library for open source geo.
-It will be installed as dependencies by the tools above; listed
-separately out of respect for how essential it is.
 
+### Extra ubuntu details
+
+Not quite a complete cookbook, but close:
+
+```
+# Add the UbuntuGIS PPA
+add-apt-repository ppa:ubuntugis/ubuntugis-unstable
+apt-get update
+
+# Install needed software with apt and PIP
+apt-get install git p7zip-full python-pip postgresql-server-dev-9.1 python-dev libevent-dev gdal-bin postgis
+pip install psycopg2 gunicorn tilestache requests grequests
+
+# Install pgdbf from sources
+Download [pgdbf source](http://sourceforge.net/projects/pgdbf/files/pgdbf/0.6.2/)
+tar -Jxf pgdbf.tar.gz
+cd pgdbf; ./configure; make; sudo make install
+
+# Postgres needs to be set up with appropriate user login.
+```
 
 ## Project components
 
