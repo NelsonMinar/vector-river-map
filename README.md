@@ -179,7 +179,7 @@ apt-get update
 
 # Install needed software with apt and PIP
 apt-get install git p7zip-full python-pip postgresql-server-dev-9.1 python-dev libevent-dev gdal-bin postgis
-pip install psycopg2 gunicorn tilestache requests grequests
+pip install psycopg2 gunicorn tilestache requests grequests shapely
 
 # Install pgdbf from sources
 Download [pgdbf source](http://sourceforge.net/projects/pgdbf/files/pgdbf/0.6.2/)
