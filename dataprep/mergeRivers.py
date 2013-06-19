@@ -9,7 +9,7 @@ if one is present, or else the HUC8 from reachcode."""
 import psycopg2
 import time
 
-conn = psycopg2.connect("dbname=rivers host=localhost")
+conn = psycopg2.connect("dbname=rivers")
 conn.autocommit = True      # required for Postgres bug workaround below
 cur = conn.cursor()
 
