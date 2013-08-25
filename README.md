@@ -332,7 +332,8 @@ a topological measure of its distance from headwaters.
 The map could be made more beautiful by
 [varying the river color too](http://blog.dwtkns.com/2011/generic-stream-terms/),
 or bringing in extra information on river size such as flow rate or average
-channel width.
+channel width. See this [Pacific Institute map](http://www.pacinst.org/american-rivers-a-graphic/)
+for an example using flow estimates from NHD's EROM_MA0001 table.
 
 * More thematic data. The ESRI relief tiles are a nice base map because they show the
 natural relationship between terrain and river flow, but it's pretty minimal.
