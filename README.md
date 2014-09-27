@@ -5,7 +5,7 @@ Map of American Rivers
 
 By [Nelson Minar](http://www.somebits.com/) <tt>&lt;[nelson@monkey.org](mailto:nelson@monkey.org)&gt;</tt><br>
 May 2013<br>
-See the [live map](http://www.somebits.com/rivers/rivers-polymaps.html)
+See the [live map](http://www.somebits.com/rivers/rivers-d3leaflet.html)
 and [the source code](https://github.com/NelsonMinar/vector-river-map).
 
 <a href="http://www.somebits.com/rivers/rivers-polymaps.html#9/38.4385/-121.1270"><img src="https://raw.github.com/NelsonMinar/vector-river-map/master/sample.jpg" alt="sample map"></a>
