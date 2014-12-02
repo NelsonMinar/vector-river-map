@@ -12,7 +12,7 @@ set -eu
 
 DESTDIR=./NHD
 # If you want to do a test run for California only, set this to true
-CAONLY=true
+CAONLY=false
 
 # URLs of data, painstakingly copied out of the web page. Could automate with a scraper
 URLS=`cat << EOF
@@ -23,31 +23,31 @@ http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusPN/NHDPlusV21_
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGB/NHDPlusV21_GB_16_NHDSnapshot_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGB/NHDPlusV21_GB_16_NHDPlusAttributes_02.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus15/NHDPlusV21_CO_15_NHDSnapshot_03.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus15/NHDPlusV21_CO_15_NHDPlusAttributes_02.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus15/NHDPlusV21_CO_15_NHDPlusAttributes_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus14/NHDPlusV21_CO_14_NHDSnapshot_04.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus14/NHDPlusV21_CO_14_NHDPlusAttributes_03.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus14/NHDPlusV21_CO_14_NHDPlusAttributes_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusRG/NHDPlusV21_RG_13_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusRG/NHDPlusV21_RG_13_NHDPlusAttributes_02.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusTX/NHDPlusV21_TX_12_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusTX/NHDPlusV21_TX_12_NHDPlusAttributes_04.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus11/NHDPlusV21_MS_11_NHDSnapshot_04.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus11/NHDPlusV21_MS_11_NHDSnapshot_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus11/NHDPlusV21_MS_11_NHDPlusAttributes_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDSnapshot_05.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDPlusAttributes_07.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10L/NHDPlusV21_MS_10L_NHDPlusAttributes_08.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10U/NHDPlusV21_MS_10U_NHDSnapshot_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10U/NHDPlusV21_MS_10U_NHDPlusAttributes_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSR/NHDPlusV21_SR_09_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSR/NHDPlusV21_SR_09_NHDPlusAttributes_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDSnapshot_03.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDPlusAttributes_02.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDPlusAttributes_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus07/NHDPlusV21_MS_07_NHDSnapshot_04.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus07/NHDPlusV21_MS_07_NHDPlusAttributes_05.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus07/NHDPlusV21_MS_07_NHDPlusAttributes_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus06/NHDPlusV21_MS_06_NHDSnapshot_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus06/NHDPlusV21_MS_06_NHDPlusAttributes_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus05/NHDPlusV21_MS_05_NHDSnapshot_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus05/NHDPlusV21_MS_05_NHDPlusAttributes_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGL/NHDPlusV21_GL_04_NHDSnapshot_07.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGL/NHDPlusV21_GL_04_NHDPlusAttributes_06.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGL/NHDPlusV21_GL_04_NHDPlusAttributes_08.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSA/NHDPlus03W/NHDPlusV21_SA_03W_NHDSnapshot_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSA/NHDPlus03W/NHDPlusV21_SA_03W_NHDPlusAttributes_02.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSA/NHDPlus03S/NHDPlusV21_SA_03S_NHDSnapshot_03.7z
