@@ -6,4 +6,4 @@
 rm -rf /tmp/stache
 
 # Launch gunicorn
-gunicorn -c gunicorn.cfg.py 'TileStache:WSGITileServer("tilestache.cfg")'
+gunicorn --error-logfile=- -c gunicorn.cfg.py 'TileStache:WSGITileServer("tilestache.cfg")'
