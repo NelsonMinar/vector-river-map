@@ -186,6 +186,7 @@ edit /etc/postgresql/9.3/main/pg_hba.conf
 
 # Optionally tune postgres performance
 edit /etc/postgresql/9.3/main/postgresql.conf
+```
 
 ## Project components
 
