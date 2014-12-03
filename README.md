@@ -142,8 +142,9 @@ On the Mac, most prerequisites are available via
 [Homebrew](http://mxcl.github.io/homebrew/); see also this
 [guide to open source geo on the Mac](https://github.com/nvkelso/geo-how-to/wiki/Installing-Open-Source-Geo-Software:-Mac-Edition).
 On Ubuntu most software is available via
-`apt-get`, although PostGIS 2 from the [UbuntuGIS
-PPA](https://wiki.ubuntu.com/UbuntuGIS) is necessary. See below for
+`apt-get`. This code requires PostGIS 2; if you are running something older than Ubuntu 14.04 you
+may need the [UbuntuGIS
+PPA](https://wiki.ubuntu.com/UbuntuGIS). See below for
 extra Ubuntu notes. Other Linux
 distributions can probably install the required software via their native
 package system. If the code is available on
@@ -155,11 +156,10 @@ or Ubuntu package versions.
 * [p7zip](http://p7zip.sourceforge.net/) for unpacking NHDPlus data. Ubuntu users be sure to install `p7zip-full`.
 * [PostgreSQL](http://www.postgresql.org/) and [PostGIS](http://postgis.refractions.net/) for a geospatial database.
 PostgreSQL 9.1 or later and PostGIS 2 are recommended for ease of installing the PostGIS extension.
+This database is moderately large; you may want to [tune Postgres settings](http://nelsonslog.wordpress.com/2011/10/12/quick-postgresql-tuning-notes/) to use more memory.
 * [psycopg2](http://initd.org/psycopg/) for talking to Postgres from Python.
 * shp2pgsql, part of PostGIS, for importing ESRI shapefiles into PostGIS
-* [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Unfortunately the Ubuntu versions prior to 0.6.2 do not have the `-s` flag needed for handling non-ASCII data. Install from
-[sources](http://sourceforge.net/projects/pgdbf/files/pgdbf/) or ensure you're
-getting version 0.6.2 or later from somewhere.
+* [pgdbf](https://github.com/kstrauser/pgdbf) for importing DBF databases into PostgreSQL. Note you need at least version 0.6.2 for the `-s` flag.
 * [Gunicorn](http://gunicorn.org/) for a Python web app server.
 * [TileStache](http://tilestache.org/) for the Python web app that serves map tiles. TileStache has
 an undocumented dependency on [Shapely](https://pypi.python.org/pypi/Shapely)
@@ -168,26 +168,24 @@ that you can install via `pip`.
 [grequests](https://github.com/kennethreitz/grequests) for `serverTest.py`, a Python HTTP client test.
 * [gdal](http://www.gdal.org/) is the low level library for open source geo.
 
-### Extra ubuntu details
+### Extra Ubuntu 14.04 details
 
 Not quite a complete cookbook, but close:
 
 ```
-# Add the UbuntuGIS PPA
-add-apt-repository ppa:ubuntugis/ubuntugis-unstable
-apt-get update
-
 # Install needed software with apt and PIP
-apt-get install git p7zip-full python-pip postgresql-server-dev-9.1 python-dev libevent-dev gdal-bin postgis
-pip install psycopg2 gunicorn tilestache requests grequests shapely
-
-# Install pgdbf from sources
-Download [pgdbf source](http://sourceforge.net/projects/pgdbf/files/pgdbf/0.6.2/)
-tar -Jxf pgdbf.tar.gz
-cd pgdbf; ./configure; make; sudo make install
+apt-get install git p7zip-full python-pip postgresql-server-dev-all python-dev libevent-dev gdal-bin postgis postgresql-client postgresql pgdbf
+pip install psycopg2 gunicorn tilestache requests grequests shapely --allow-external PIL --allow-unverified PIL
 
 # Postgres needs to be set up with appropriate user login.
-```
+sudo -u postgres createuser -s -d nelson
+
+# Configure Postgres to let user connect without password by specifying "trust" method
+# (or else alter code to supply a password)
+edit /etc/postgresql/9.3/main/pg_hba.conf
+
+# Optionally tune postgres performance
+edit /etc/postgresql/9.3/main/postgresql.conf
 
 ## Project components
 
