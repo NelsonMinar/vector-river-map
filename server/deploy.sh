@@ -7,9 +7,9 @@
 cp -a server/serve.sh server/tilestache.cfg server/gunicorn.cfg.py ~/rivers/
 
 # Client code
-cp -a clients/lib clients/forkme.png clients/us-states.js /var/www/rivers/
+cp -a clients/lib clients/forkme.png clients/us-states.js /var/www/somebits/rivers/
 for c in clients/rivers-*.html; do
-    sed 's%localhost:8000%www.somebits.com:8001%g' < $c >| /var/www/rivers/`basename $c`
+    sed 's%localhost:8000%www.somebits.com:8001%g' < $c >| /var/www/somebits/rivers/`basename $c`
 done
 
 # Check nginx config
@@ -18,3 +18,6 @@ if [ $? -ne 0 ]; then
     echo "Warning: server/nginx-rivers.conf is out of sync"
     diff -u /etc/nginx/sites-enabled/rivers server/nginx-rivers.conf
 fi
+
+# Warning
+echo "There is no init script. Have to start from ~/rivers/ manually."
