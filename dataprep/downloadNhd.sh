@@ -12,7 +12,7 @@ set -eu
 
 DESTDIR=./NHD
 # If you want to do a test run for California only, set this to true
-CAONLY=false
+CAONLY=true
 
 # URLs of data, painstakingly copied out of the web page. Could automate with a scraper
 URLS=`cat << EOF
