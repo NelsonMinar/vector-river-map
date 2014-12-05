@@ -379,6 +379,7 @@ and [Mike Bostock's WebGL raster reprojection](http://bl.ocks.org/mbostock/54464
 [Natural Earth](http://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-rivers-lake-centerlines/)
 is a good place to start. It also has links to other sources like
 [Europe's CCM2](http://ccm.jrc.ec.europa.eu/php/index.php?action=view&id=23).
+[Australia](http://www.bom.gov.au/water/geofabric/) has data too!
 
 ## Conclusion
 
