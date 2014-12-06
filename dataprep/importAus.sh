@@ -45,6 +45,9 @@ ogr2ogr -f "PostgreSQL" PG:"dbname=$DB" \
 
 # ogr2ogr creates a spatial index automatically
 
+psql -d "$DB" -c 'create index  ahgfmappedstream_perennial_idx on ahgfmappedstream(perennial);'
+psql -d "$DB" -c 'create index ahgfmappedstream_upstrgeoln_idx on ahgfmappedstream(upstrgeoln);'
+
 ### clean up and analyze
 psql -d "$DB" -c 'vacuum analyze' > /dev/null
 
