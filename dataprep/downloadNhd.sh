@@ -19,7 +19,7 @@ URLS=`cat << EOF
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCA/NHDPlusV21_CA_18_NHDPlusAttributes_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusPN/NHDPlusV21_PN_17_NHDSnapshot_04.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusPN/NHDPlusV21_PN_17_NHDPlusAttributes_04.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusPN/NHDPlusV21_PN_17_NHDPlusAttributes_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGB/NHDPlusV21_GB_16_NHDSnapshot_05.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusGB/NHDPlusV21_GB_16_NHDPlusAttributes_02.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusCO/NHDPlus15/NHDPlusV21_CO_15_NHDSnapshot_03.7z
