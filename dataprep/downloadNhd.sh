@@ -39,7 +39,7 @@ http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus10U/
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSR/NHDPlusV21_SR_09_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusSR/NHDPlusV21_SR_09_NHDPlusAttributes_03.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDSnapshot_03.7z
-http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDPlusAttributes_03.7z
+http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus08/NHDPlusV21_MS_08_NHDPlusAttributes_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus07/NHDPlusV21_MS_07_NHDSnapshot_04.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus07/NHDPlusV21_MS_07_NHDPlusAttributes_06.7z
 http://www.horizon-systems.com/NHDPlusData/NHDPlusV21/Data/NHDPlusMS/NHDPlus06/NHDPlusV21_MS_06_NHDSnapshot_06.7z
