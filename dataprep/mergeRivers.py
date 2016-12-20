@@ -16,7 +16,7 @@ cur = conn.cursor()
 start = time.time()
 def log(msg):
     "Log a message with some reporting on time elapsed"
-    print "{:>7.2f}s {}".format(time.time()-start, msg)
+    print ("{:>7.2f}s {}".format(time.time()-start, msg))
 
 # Create the schema
 cur.execute("""drop table if exists merged_rivers;""")
@@ -40,7 +40,7 @@ insertCursor = conn.cursor()
 # could span multiple HUC8s. We just pick one.
 cur.execute("select distinct(gnis_id) from rivers where gnis_id is not null;")
 count = cur.rowcount
-log("Merging {} unique gnis_ids, roughly {} seconds".format(count, count*300/178906))
+log("Merging %d unique gnis_ids, roughly %d seconds" % (count, count/70))
 for (gnisId,) in cur:
     insertCursor.execute("""
         insert into merged_rivers(gnis_id, name, strahler, huc8, geometry)
@@ -65,7 +65,7 @@ for (gnisId,) in cur:
 
 cur.execute("select distinct(huc8) from rivers where gnis_id is null;")
 count = cur.rowcount
-log("Merging {} unique HUC8s, roughly {} seconds".format(count, count*118/600))
+log("Merging %d unique HUC8s, roughly %d seconds" % (count, count/6))
 for (huc8,) in cur:
     # Try each insert several times; working around Postgres bug #8167
     tries = 3
