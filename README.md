@@ -152,6 +152,7 @@ package system. If the code is available on
 [`pip`](http://www.pip- installer.org/en/latest/) rather than rely on the Mac
 or Ubuntu package versions.
 
+* Python 2. I'd prefer Python 3 but some of the dependencies don't support it.
 * [curl](http://curl.haxx.se/) for downloading NHDPlus data from the web.
 * [p7zip](http://p7zip.sourceforge.net/) for unpacking NHDPlus data. Ubuntu users be sure to install `p7zip-full`.
 * [PostgreSQL](http://www.postgresql.org/) and [PostGIS](http://postgis.refractions.net/) for a geospatial database.
@@ -168,24 +169,24 @@ that you can install via `pip`.
 [grequests](https://github.com/kennethreitz/grequests) for `serverTest.py`, a Python HTTP client test.
 * [gdal](http://www.gdal.org/) is the low level library for open source geo.
 
-### Extra Ubuntu 14.04 details
+### Extra Ubuntu 16.04 details
 
 Not quite a complete cookbook, but close:
 
 ```
 # Install needed software with apt and PIP
 apt-get install git p7zip-full python-pip postgresql-server-dev-all python-dev libevent-dev gdal-bin postgis postgresql-client postgresql pgdbf
-pip install psycopg2 gunicorn tilestache requests grequests shapely --allow-external PIL --allow-unverified PIL
+_create a virtualenv for python 2_
+pip install psycopg2 gunicorn tilestache mapbox-vector-tile==0.5.0 requests grequests shapely --allow-external PIL --allow-unverified PIL
 
-# Postgres needs to be set up with appropriate user login.
-sudo -u postgres createuser -s -d nelson
-
-# Configure Postgres to let user connect without password by specifying "trust" method
-# (or else alter code to supply a password)
-edit /etc/postgresql/9.3/main/pg_hba.conf
+# Ensure postgres allows you to connect without a password
+echo 'select version();' | psql -w -U nelson -h localhost postgres
+# If this fails, configure postgres to let you connect via TCP to localhost without password
+# One option is to specify the "trust" method on 127.0.0.1/32
+edit /etc/postgresql/9.5/main/pg_hba.conf
 
 # Optionally tune postgres performance
-edit /etc/postgresql/9.3/main/postgresql.conf
+edit /etc/postgresql/9.5/main/postgresql.conf
 ```
 
 ## Project components
