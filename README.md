@@ -1,6 +1,19 @@
 Map of American Rivers
 ======================
 
+
+## Warning (January 2018)
+
+This project is now nearly five years old. Huzzah! It is also slowly falling out of date.
+Many of the ideas in it are still relevant but vector tile technology has improved
+significantly since I did this work. I think the tutorial is still useful, but be aware
+there are more modern choices for things. For example, I'd use the [Mapbox vector tiles
+format](https://www.mapbox.com/vector-tiles/specification/) for the tiles now, not GeoJSON.
+
+Also the code may have rotted a little bit. The main thing that breaks is the download URLs
+for NHD become invalid. It's easy to update them (typically a version number increment). Pull
+requests welcome.
+
 ## A vector tile demonstration and tutorial
 
 By [Nelson Minar](http://www.somebits.com/) <tt>&lt;[nelson@monkey.org](mailto:nelson@monkey.org)&gt;</tt><br>
